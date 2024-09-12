@@ -1,15 +1,35 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pantalla 1</title>
-</head>
-<body>
-    <h1>Pantalla 1</h1>
-    <button onclick="irAPantalla2()">Ir a Pantalla 2</button>
-
+    <meta charset="UTF-8"> 
+    <title>Pantalla 2</title>  
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/mainStyles.css">
     <script src="/eel.js"></script>
-    <script src="script.js"></script>
+</head>
+<body class="bg-black"> 
+
+    <nav class="navbar bg-white "></nav>
+        <div class="container-fluid ">
+            <a class="navbar-brand">Predicción para la Insuficiencia Cardíaca</a>
+            <ul class="nav nav-underline px-4">
+        </div>
+    </nav>
+    <div class="bg-white d-flex align-items-center mx-5 p-3 row rounded 3">
+        <h3>  Inicia Sesión </h3>
+        <p> <label>Usuario: </label> <input type="text"/></p>
+        <p> <label>Contraseña: </label><input type="password"/><button>Ver</button></p>
+        <button onclick="saludar()" class="btn col-3 btn-primary">Iniciar Sesión</button>
+
+        <p>
+            <button class="btn btn-link">¿Nuevo en la plataforma? Crea una cuenta</button> 
+        </p> 
+    </div> 
+    <!-- Botón para verificar la navegación -->
+    <button onclick="irAPantalla()">Ir a Pantalla 2</button>
+    
+    <!-- Script externo -->
+    <script src="../../js/presentationVinculation.js"></script>
 </body>
+ 
 </html>

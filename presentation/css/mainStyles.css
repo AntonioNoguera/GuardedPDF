@@ -1,0 +1,26 @@
+body {
+    background: repeating-linear-gradient(45deg,
+            #4D4C7D 0%,
+            #4D4C7D 25%,
+
+            #363062 25%,
+            #363062 50%,
+
+            #4D4C7D 50%,
+            #4D4C7D 75%,
+
+            #363062 75%,
+            #363062 100%);
+    background-size: 100px 100px;
+    animation: move-it 7s linear infinite;
+} 
+
+@keyframes move-it {
+    0% {
+        background-position: initial;
+    }
+
+    100% {
+        background-position: 100px 0px;
+    }
+}
