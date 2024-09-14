@@ -1,26 +1,95 @@
+
 body {
-    background: repeating-linear-gradient(45deg,
-            #4D4C7D 0%,
-            #4D4C7D 25%,
+  background: radial-gradient(rgba(255,254,234,1) 0%, rgba(255,254,234,1) 35%, #f08b8b 100%);
+  overflow-x: hidden; /* Oculta el scroll horizontal */
+}
 
-            #363062 25%,
-            #363062 50%,
+.ocean {
+  height: 12vh;
+  width: 100%;
 
-            #4D4C7D 50%,
-            #4D4C7D 75%,
+  z-index: -2;
 
-            #363062 75%,
-            #363062 100%);
-    background-size: 100px 100px;
-    animation: move-it 7s linear infinite;
-} 
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background: #400101;
+  
+}
 
-@keyframes move-it {
-    0% {
-        background-position: initial;
-    }
+.wave {
+  background: url(../html/wave.svg) repeat-x;
+  position: absolute;
+  width: 6400px;
+  top: -198px;
+  left: 0;
+  height: 198px;
+  transform: translate(0, 0, 0);
+  animation: wave 10s ease infinite;
+}
 
-    100% {
-        background-position: 100px 0px;
-    }
+.wave2 {
+    background: url(../html/wave.svg) repeat-x;
+    position: relative;
+    width: 300%;
+    top: -198px;
+    left: 0;
+    height: 198px;
+    transform: translate(0, 0, 0); 
+}
+
+.wave2 {
+  top: -168px; 
+  animation: swell 7.5s ease-in-out infinite;
+  opacity: 1;
+}
+
+@keyframes wave {
+  0% { margin-left: 0; }
+  100% { margin-left: -1600px;}
+}
+@keyframes swell {
+  0%, 100% {
+    transform: translate(0, -30px);
+    margin-left: 0px;
+  }
+
+  50% {
+    transform: translate(0, 5px);
+    
+    margin-left: -800px;
+  }
+}
+
+* {
+  font-family: "Rubik", sans-serif; 
+}
+
+
+
+.content{
+  z-index: 20;
+  background:  rgba(255, 255, 255, 0.89); 
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+  align-items: center;
+
+  margin-top: 20vh;
+
+  padding: 20px 40px;
+
+  margin-inline: 20%;
+}
+
+
+.btn-primary {
+  background-color: #b46548; /* Cambia a un color verde */
+  border-color: #b46548;     /* Asegúrate de cambiar también el color del borde */
+}
+
+.btn-primary:hover {
+  background-color: #218838; /* Cambia el color en el estado hover */
+  border-color: #1e7e34;     /* Cambia el color del borde en hover */
 }

@@ -5,31 +5,43 @@
     <title>Pantalla 2</title>  
     <link rel="stylesheet" href="../../css/bootstrap.min.css">
     <link rel="stylesheet" href="../../css/mainStyles.css">
+
     <script src="/eel.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
 </head>
 <body class="bg-black"> 
 
-    <nav class="navbar bg-white "></nav>
+    <div class="ocean">
+        <div class="wave"></div>
+        <div class="wave2"></div>
+      </div>
+
+    <nav class="navbar bg-white ">
         <div class="container-fluid ">
-            <a class="navbar-brand">Predicción para la Insuficiencia Cardíaca</a>
-            <ul class="nav nav-underline px-4">
+            <a class="navbar-brand">SafePDF ( FIME )</a>
+             
         </div>
     </nav>
-    <div class="bg-white d-flex align-items-center mx-5 p-3 row rounded 3">
+
+    <div class="content">
         <h3>  Inicia Sesión </h3>
         <p> <label>Usuario: </label> <input type="text"/></p>
         <p> <label>Contraseña: </label><input type="password"/><button>Ver</button></p>
-        <button onclick="saludar()" class="btn col-3 btn-primary">Iniciar Sesión</button>
+        <button onclick="" class="btn col-3 btn-primary">Iniciar Sesión</button>
 
         <p>
-            <button class="btn btn-link">¿Nuevo en la plataforma? Crea una cuenta</button> 
+          <!--  <button class="btn btn-link" onclick="freeNavigateTo(Routes.REGISTER_PAGE)"> -->
+            <button class="btn btn-link" onclick="navigateTo(Routes.REGISTER_PAGE, true)">
+                ¿Nuevo en la plataforma? Crea una cuenta
+            </button> 
         </p> 
     </div> 
-    <!-- Botón para verificar la navegación -->
-    <button onclick="irAPantalla()">Ir a Pantalla 2</button>
     
-    <!-- Script externo -->
-    <script src="../../js/presentationVinculation.js"></script>
+    <script type="module" src="./../../js/app_validations/auth_validations.js"></script>
+    <script  type="module" src="../../js/presentationVinculation.js"></script>
+    
 </body>
- 
 </html>

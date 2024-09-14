@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8"> 
+    <title>Home</title>  
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/mainStyles.css">
+    <script src="/eel.js"></script>
+</head>
+<body class="bg-black"> 
+
+    <nav class="navbar bg-white ">
+        <div class="container-fluid ">
+            <a class="navbar-brand">SafePDF ( FIME )</a>
+             
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="bg-white d-flex align-items-center mx-5 mt-5 p-3 flex-column rounded-4">
+                <h3>  Mis archivos </h3>
+                
+                <p> 
+                    <label>Verifica tu contraseña: </label> <input type="text"/></p>
+                    <button class="btn col-3 btn-primary">
+                        Solicitar Registro
+                    </button>
+
+                    <p>
+                        <button class="btn btn-link" onclick="freeNavigateTo(Routes.LOGIN_PAGE)">
+                            ¿Nuevo en la plataforma? Crea una cuenta
+                        </button> 
+                    </p> 
+            </div> 
+    </div>
+    
+    <!-- Script externo -->
+    <script src="../../js/presentationVinculation.js"></script>
+</body>
+ 
+</html>

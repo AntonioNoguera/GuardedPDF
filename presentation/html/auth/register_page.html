@@ -2,12 +2,50 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8"> 
-    <title>Pantalla 1</title>  
+    <title>Pantalla 2</title>  
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/mainStyles.css">
+
     <script src="/eel.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
 </head>
-<body> 
-    <div>
-        <p>  Registrate Sesión </p> 
+<body class="bg-black"> 
+
+    <nav class="navbar bg-white ">
+        <div class="container-fluid ">
+            <a class="navbar-brand">SafePDF ( FIME )</a>
+             
+        </div>
+    </nav>
+ 
+        <div class="bg-white d-flex align-items-center mx-5 mt-5 p-3 flex-column rounded-4">
+                <h3>Regístrate</h3>
+                <p> 
+                    <label>Nombre Completo: </label>
+                    <input type="text"/>
+                </p>
+
+                <p>
+                    <label>Nombre de usuario: </label><input class= "form-input" type="password"/><button>Ver</button>
+                </p>
+                <p> <label>Contraseña: </label> <input type="text"/></p>
+                <p> 
+                    <label>Verifica tu contraseña: </label> <input type="text"/></p>
+                    <button class="btn col-3 btn-primary">
+                        Solicitar Registro
+                    </button>
+
+                    <p>
+                        <button class="btn btn-link" onclick="freeNavigateTo(Routes.LOGIN_PAGE)">
+                            ¿Ya tienes una cuenta?, Inicia sesión
+                        </button> 
+                    </p> 
+            </div>  
+    <!-- Script externo -->
+    <script src="../../js/presentationVinculation.js"></script>
 </body>
  
 </html>
