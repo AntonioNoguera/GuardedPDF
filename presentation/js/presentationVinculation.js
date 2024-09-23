@@ -1,8 +1,5 @@
 import { loginTest } from './app_validations/auth_validations.js';
 
-console.log("as")
-alert("Linked")
-
 const Routes = Object.freeze({
     REGISTER_PAGE: '/html/auth/register_page.html',
     LOGIN_PAGE: '/html/auth/index.html',
@@ -36,3 +33,5 @@ const App = {
 // Exportar el objeto al ámbito global
 window.App = App;
 window.navigateTo = navigateTo;
+window.Routes = Routes;
+window.freeNavigateTo = freeNavigateTo;

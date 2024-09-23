@@ -1,7 +1,19 @@
-
-body {
-  background: radial-gradient(rgba(255,254,234,1) 0%, rgba(255,254,234,1) 35%, #f08b8b 100%);
+.backgroundFlows {
+  height: 100vh;
+  position: absolute;
+  width: 100%;
+  z-index: -2;
+  background: linear-gradient(rgba(255,254,234,1) 0%, #f08b8b 100%);
   overflow-x: hidden; /* Oculta el scroll horizontal */
+}
+
+body{
+  overflow: hidden;
+}
+
+*{
+  color : #400101;
+  font-weight: 400;
 }
 
 .ocean {
@@ -13,8 +25,7 @@ body {
   position: absolute;
   bottom: 0;
   left: 0;
-  background: #400101;
-  
+  background: #400101;  
 }
 
 .wave {
@@ -65,31 +76,45 @@ body {
   font-family: "Rubik", sans-serif; 
 }
 
-
-
 .content{
   z-index: 20;
   background:  rgba(255, 255, 255, 0.89); 
-  border-radius: 20px;
-  display: flex;
-  flex-direction: column;
-  align-self: center;
-  align-items: center;
-
-  margin-top: 20vh;
-
-  padding: 20px 40px;
-
-  margin-inline: 20%;
+  border-radius: 20px;  
+  position: absolute;  
+  max-width: 90%;
 }
 
-
 .btn-primary {
-  background-color: #b46548; /* Cambia a un color verde */
-  border-color: #b46548;     /* Asegúrate de cambiar también el color del borde */
+  background-color: #f2935c; /* Cambia a un color verde */
+  border-color: #f2935c;     /* Asegúrate de cambiar también el color del borde */
 }
 
 .btn-primary:hover {
-  background-color: #218838; /* Cambia el color en el estado hover */
-  border-color: #1e7e34;     /* Cambia el color del borde en hover */
+  background-color: #f0cabc; /* Cambia el color en el estado hover */
+  border-color: #f0cabc;     /* Cambia el color del borde en hover */
+}
+
+.btn-secondary {
+  background-color: #555555; /* Cambia a un color verde */
+  border-color: #555555;     /* Asegúrate de cambiar también el color del borde */
+}
+
+.btn-secondary:hover {
+  background-color: #a3a3a3; /* Cambia el color en el estado hover */
+  border-color: #a3a3a3;     /* Cambia el color del borde en hover */
+}
+
+.btn-link{
+  
+  color: #f23d3d;
+}
+
+
+label {
+  font-size: 18px;
+}
+
+.h3 {
+  font-size: 30px;
+  font-weight: 500;
 }

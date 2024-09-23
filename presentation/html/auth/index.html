@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8"> 
-    <title>Pantalla 2</title>  
+    <title>Pantalla 1</title>  
     <link rel="stylesheet" href="../../css/bootstrap.min.css">
     <link rel="stylesheet" href="../../css/mainStyles.css">
 
@@ -13,35 +13,58 @@
     <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
 </head>
 <body class="bg-black"> 
+    <div class="backgroundFlows"></div>
 
     <div class="ocean">
         <div class="wave"></div>
         <div class="wave2"></div>
-      </div>
+    </div>
 
-    <nav class="navbar bg-white ">
-        <div class="container-fluid ">
+    <nav class="navbar bg-white">
+        <div class="container-fluid">
             <a class="navbar-brand">SafePDF ( FIME )</a>
-             
         </div>
     </nav>
 
-    <div class="content">
-        <h3>  Inicia Sesión </h3>
-        <p> <label>Usuario: </label> <input type="text"/></p>
-        <p> <label>Contraseña: </label><input type="password"/><button>Ver</button></p>
-        <button onclick="" class="btn col-3 btn-primary">Iniciar Sesión</button>
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6 p-5 content">
+                <p class="h3 text-center mb-4">Inicia Sesión</p>
 
-        <p>
-          <!--  <button class="btn btn-link" onclick="freeNavigateTo(Routes.REGISTER_PAGE)"> -->
-            <button class="btn btn-link" onclick="navigateTo(Routes.REGISTER_PAGE, true)">
-                ¿Nuevo en la plataforma? Crea una cuenta
-            </button> 
-        </p> 
-    </div> 
-    
+                <form>
+                    <div class="mb-3">
+                        <label for="usuario" class="form-label">Usuario:</label>
+                        <input id="usuario" class="form-control" type="text" required/>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Contraseña:</label>
+                        <div class="input-group">
+                            <input id="password" class="form-control" type="password" required/>
+                            <button class="btn btn-outline-secondary" type="button">Ver</button>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-2">
+                            <button class="btn btn-secondary w-100">Iniciar Sesión</button>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <button class="btn btn-primary w-100">Iniciar Sesión</button>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-3">
+                        <button class="btn btn-link" onclick="navigateTo(Routes.REGISTER_PAGE, true)">
+                            ¿Nuevo en la plataforma? Crea una cuenta
+                        </button> 
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script type="module" src="./../../js/app_validations/auth_validations.js"></script>
-    <script  type="module" src="../../js/presentationVinculation.js"></script>
-    
+    <script type="module" src="../../js/presentationVinculation.js"></script>
 </body>
 </html>
