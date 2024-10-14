@@ -28,6 +28,7 @@
         </div>
     </nav>
 
+    <!-- PENDIENTE AÑADIR LA SOLICITUD DE LOS PERMISOS -->
     <div class="container my-5">
         <div class="row justify-content-center">
             <div class="col-md-6 bg-white p-4 rounded-4 shadow">
@@ -37,23 +38,36 @@
                         <label for="nombreCompleto" class="form-label">Nombre Completo:</label>
                         <input id="nombreCompleto" type="text" class="form-control" required/>
                     </div>
+                    
+                    <div class="mb-3">
+                        <label for="usuario" class="form-label">Nombre de Usuario:</label>
+                        <input id="usuario" type="text" class="form-control" required/>
+                    </div>
 
                     <div class="mb-3">
-                        <label for="usuario" class="form-label">Nombre de usuario:</label>
+                        <label for="password" class="form-label">Contraseña:</label>
                         <div class="input-group">
-                            <input id="usuario" type="text" class="form-control" required/>
+                            <input id="password" type="password" class="form-control" required/>
                             <button class="btn btn-outline-secondary" type="button">Ver</button>
                         </div>
                     </div>
 
                     <div class="mb-3">
-                        <label for="password" class="form-label">Contraseña:</label>
-                        <input id="password" type="password" class="form-control" required/>
+                        <label for="password_verifications" class="form-label">Verificar Contraseña:</label>
+                        <div class="input-group">
+                            <input id="password_verifications" type="password" class="form-control" required/>
+                            <button class="btn btn-outline-secondary" type="button">Ver</button>
+                        </div>
                     </div>
 
+                    <!-- Selector de Nivel de Usuario -->
                     <div class="mb-3">
-                        <label for="verificarPassword" class="form-label">Verifica tu contraseña:</label>
-                        <input id="verificarPassword" type="password" class="form-control" required/>
+                        <label for="userLevel" class="form-label">Nivel de Usuario:</label>
+                        <select id="userLevel" class="form-select" required>
+                            <option value="" disabled selected>Selecciona un nivel de usuario</option>
+                            <option value="admin">Administrador</option>
+                            <option value="employee">Empleado</option>
+                        </select>
                     </div>
 
                     <div class="d-grid mb-3">
