@@ -25,8 +25,15 @@
     <nav class="navbar bg-white">
         <div class="container-fluid">
             <a class="navbar-brand">SafePDF ( FIME )</a>
+    
+            <div class="d-flex ms-auto">
+                <a class="user_type" style="margin-right: 20px;">Permisos (Administrador)</a>
+                <a href="#" onclick="navigateTo(Routes.HISTORY_PAGE)" class="nav-link" style="margin-right: 20px;">Historial de Transacciones</a>
+                <a href="#" onclick="navigateTo(Routes.ADMIN_PAGE)" class="nav-link" style="margin-right: 20px;">Administración de Usuarios</a>
+            </div>
         </div>
-    </nav> 
+    </nav>
+    
 
     <div class="container d-flex justify-content-center align-items-center my-5">
 
@@ -40,7 +47,7 @@
                             <h5>Listado de Archivo</h5>
                         </div>
                         <div class="col-2">
-                            <a href="#" class="btn btn-primary w-100">Crear Nuevo PDF</a>
+                            <a href="#" class="btn btn-primary w-100" onclick="navigateTo(Routes.MERGE_PAGE)">Crear Nuevo PDF</a>
                         </div>
                     </div>
                     
