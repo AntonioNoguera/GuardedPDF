@@ -1,0 +1,58 @@
+-- Crear base de datos
+CREATE DATABASE IF NOT EXISTS safe_pdf;
+
+-- Seleccionar la base de datos
+USE safe_pdf;
+
+-- Tabla de Roles
+CREATE TABLE IF NOT EXISTS role_table (
+    role_id INT AUTO_INCREMENT PRIMARY KEY,
+    role_name VARCHAR(60) NOT NULL UNIQUE,
+    role_description VARCHAR(100) NOT NULL
+);
+
+-- Tabla de Usuarios
+CREATE TABLE IF NOT EXISTS user_table (
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_name VARCHAR(50) NOT NULL,
+    user_fullname VARCHAR(100) NOT NULL UNIQUE,
+    user_password VARCHAR(255) NOT NULL,
+    user_password_salt VARCHAR(255) NOT NULL,
+    
+    -- Relación con la tabla de roles
+    user_role_id INT NOT NULL,
+    FOREIGN KEY (user_role_id) REFERENCES role_table(role_id) ON DELETE CASCADE,
+    
+    user_created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
+    user_authorized BOOLEAN NOT NULL DEFAULT FALSE,
+    user_last_login TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- Tabla de Archivos
+CREATE TABLE IF NOT EXISTS file_table (
+    file_id INT AUTO_INCREMENT PRIMARY KEY,
+    file_title VARCHAR(80) NOT NULL,
+    file_description VARCHAR(100) NOT NULL, 
+    file_created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
+    -- Relación con la tabla de usuarios (quien subió el archivo)
+    file_created_by INT NOT NULL,
+    FOREIGN KEY (file_created_by) REFERENCES user_table(user_id) ON DELETE CASCADE,
+    
+    file_visible_for_all BOOLEAN DEFAULT FALSE,
+    file_is_merge BOOLEAN DEFAULT FALSE
+);
+
+-- Tabla de Miembros de Unión (archivos que participan en una unión)
+CREATE TABLE IF NOT EXISTS merge_member_table (
+    merge_member_id INT AUTO_INCREMENT PRIMARY KEY,
+    
+    -- Relación con la tabla de archivos
+    file_id INT NOT NULL,
+    FOREIGN KEY (file_id) REFERENCES file_table(file_id) ON DELETE CASCADE,
+    
+    -- Relación con el archivo resultante de la unión
+    merge_result_id INT NOT NULL,
+    FOREIGN KEY (merge_result_id) REFERENCES file_table(file_id) ON DELETE CASCADE
+);

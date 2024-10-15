@@ -132,6 +132,16 @@ label {
   font-size: 20px;
   font-family: "Rubik", sans-serif; 
   text-shadow: 1px 1px 4px rgb(161, 138, 138);
+  transition: text-shadow .3s, font-size .4s;
+  padding-bottom: 0px;
+  
+  margin-inline: 20px;
+}
+.nav-link:hover{
+  font-weight: 200;
+  font-size: 21px; 
+  font-family: "Rubik", sans-serif;  
+  text-shadow: 1px 1px 1px rgb(161, 138, 138); 
 }
 
 .user_type{
