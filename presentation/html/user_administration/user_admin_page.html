@@ -27,94 +27,102 @@
             <a class="navbar-brand">SafePDF ( FIME )</a> 
             <a href="#" onclick="navigateTo(Routes.FILES_PAGE)" class="nav-link ms-auto" style="margin-right: 20px;">Volver</a>
         </div>
-    </nav>
-    
+    </nav> 
+        <div class="col-md-12 content my-5" style="height: 80vh;"> 
+            <div class="px-3 py-3 my-auto text-center" >
+                <h3>Solicitudes de Usuarios</h3>
+            </div>  
 
-    <div class="container d-flex justify-content-center align-items-center my-5">
+            <div class="row px-4 mb-3">
+                <div class="col-6"></div>
+                <div class="col-3">
+                    <a href="#" class="btn btn-primary w-100">Nuevas Solicitudes (2)</a>
+                </div>
 
-        <div class="row w-100 justify-content-center ">
-            <div class="col-md-12 bg-white p-4 rounded-4 shadow" style="height: 80vh;">
-                <h3 class="text-center ">Administrar Usuarios</h3>
-                <div class="mt-4">
-                    
-                    <div class="row py-4 px-3">
-                        <div class="col-8 px-0" >
-                            <h5>Solicitudes de Usuarios</h5>
-                        </div>
-                        <div class="col-2">
-                            <a href="#" class="btn btn-primary w-100">Nuevas Solicitudes</a>
-                        </div>
-
-                        <div class="col-2">
-                            <a href="#" class="btn btn-secondary w-100">Usuarios Activos</a>
-                        </div>
-                    </div>
-                    
-                    <!-- Contenedor que tendrá scroll interno -->
-                    <div class="row mx-2 " style="max-height: 60vh; overflow-y: auto;">
-                        <table class="table table-striped table-hover">
-                            <thead>
-                                <tr>
-                                    <th scope="col" class="w-auto">#</th>
-                                    <th scope="col" class="col-3">Nombre </th>
-                                    <th scope="col" class="col-1 text-center">Nivel de Usuario</th>
-                                    <th scope="col" class="col-2 text-center">Fecha de Subida</th> 
-                                    <th scope="col" class="col-2 text-center">Fecha de Subida</th>
-                                    <th scope="col" class="col-2 text-center">Fecha de Subida</th>
-                                    <th scope="col" class="col-2 text-center">Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Mock File 1 -->
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>Michael Antonio Noguera Guzmán</td>
-                                    <td class="text-center">2 MB</td>
-                                    <td class="text-center">12/10/2024</td>
-                                    <td class="text-center">12/10/2024</td>
-                                     
-                                    <td class="text-center">12/10/2024</td>
-                                    <td class="text-center">
-                                        <a href="#" class="btn btn-primary btn-sm w-45">Aceptar</a>
-                                        <a href="#" class="btn btn-secondary btn-sm w-45">Denegar</a>
-                                    </td>
-                                </tr> 
-
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>Michael Antonio Noguera Guzmán</td>
-                                    <td class="text-center">2 MB</td>
-                                    <td class="text-center">12/10/2024</td>
-                                    <td class="text-center">12/10/2024</td>
-                                     
-                                    <td class="text-center">12/10/2024</td>
-                                    <td class="text-center">
-                                        <a href="#" class="btn btn-primary btn-sm w-45">Aceptar</a>
-                                        <a href="#" class="btn btn-secondary btn-sm w-45">Denegar</a>
-                                    </td>
-                                </tr> 
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>Michael Antonio Noguera Guzmán</td>
-                                    <td class="text-center">2 MB</td>
-                                    <td class="text-center">12/10/2024</td>
-                                    <td class="text-center">12/10/2024</td>
-                                     
-                                    <td class="text-center">12/10/2024</td>
-                                    <td class="text-center">
-                                        <a href="#" class="btn btn-primary btn-sm w-45">Aceptar</a>
-                                        <a href="#" class="btn btn-secondary btn-sm w-45">Denegar</a>
-                                    </td>
-                                </tr> 
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="col-3">
+                    <a href="#" class="btn btn-secondary w-100">Usuarios Activos (40)</a>
                 </div>
             </div>
-        </div>
-    </div>
- 
 
+        <div class="row mx-2" >
+            <div class="table-responsive" style="height: calc(80vh - 140px) ; overflow-y: auto;">
+                <table class="table table-striped table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="w-auto">#</th>
+                            <th scope="col" class="col-3">Nombre </th>
+                            <th scope="col" class="col-1 text-center">Nivel de Usuario</th>
+                            <th scope="col" class="col-2 text-center">Fecha de Subida</th> 
+                            <th scope="col" class="col-2 text-center">Fecha de Subida</th>
+                            <th scope="col" class="col-2 text-center">Fecha de Subida</th>
+                            <th scope="col" class="col-2 text-center">Acciones</th>
+                        </tr>
+                    </thead>
+
+                        <tbody>
+                            <!-- Mock File 1 -->
+                            <tr>
+                                <th scope="row">1</th>
+                                <td>Michael Antonio Noguera Guzmán</td>
+                                <td class="text-center">2 MB</td>
+                                <td class="text-center">12/10/2024</td>
+                                <td class="text-center">12/10/2024</td>
+                                    
+                                <td class="text-center">12/10/2024</td>
+                                <td class="text-center">
+                                    <a href="#" class="btn btn-primary btn-sm w-45">Aceptar</a>
+                                    <a href="#" class="btn btn-secondary btn-sm w-45">Denegar</a>
+                                </td>
+                            </tr> 
+
+                            <tr>
+                                <th scope="row">1</th>
+                                <td>Michael Antonio Noguera Guzmán</td>
+                                <td class="text-center">2 MB</td>
+                                <td class="text-center">12/10/2024</td>
+                                <td class="text-center">12/10/2024</td>
+                                    
+                                <td class="text-center">12/10/2024</td>
+                                <td class="text-center">
+                                    <a href="#" class="btn btn-primary btn-sm w-45">Aceptar</a>
+                                    <a href="#" class="btn btn-secondary btn-sm w-45">Denegar</a>
+                                </td>
+                            </tr> 
+
+                            <tr>
+                                <th scope="row">1</th>
+                                <td>Michael Antonio Noguera Guzmán</td>
+                                <td class="text-center">2 MB</td>
+                                <td class="text-center">12/10/2024</td>
+                                <td class="text-center">12/10/2024</td>
+                                    
+                                <td class="text-center">12/10/2024</td>
+                                <td class="text-center">
+                                    <a href="#" class="btn btn-primary btn-sm w-45">Aceptar</a>
+                                    <a href="#" class="btn btn-secondary btn-sm w-45">Denegar</a>
+                                </td>
+                            </tr> 
+
+                            <tr>
+                                <th scope="row">1</th>
+                                <td>Michael Antonio Noguera Guzmán</td>
+                                <td class="text-center">2 MB</td>
+                                <td class="text-center">12/10/2024</td>
+                                <td class="text-center">12/10/2024</td>
+                                    
+                                <td class="text-center">12/10/2024</td>
+                                <td class="text-center">
+                                    <a href="#" class="btn btn-primary btn-sm w-45">Aceptar</a>
+                                    <a href="#" class="btn btn-secondary btn-sm w-45">Denegar</a>
+                                </td>
+                            </tr> 
+ 
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>  
+ 
     <script type="module" src="./../../js/app_validations/auth_validations.js"></script>
     <script type="module" src="../../js/presentationVinculation.js"></script>
     

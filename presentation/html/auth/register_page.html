@@ -27,62 +27,57 @@
             <a class="navbar-brand">SafePDF ( FIME )</a>
         </div>
     </nav>
+ 
+    <div class="small_content w-45 my-5 p-4"> 
+        <h3 class="text-center">Regístrate</h3>
+        <form>
+            <div class="mb-3">
+                <label for="nombreCompleto" class="form-label">Nombre Completo:</label>
+                <input id="nombreCompleto" type="text" class="form-control" required/>
+            </div>
+            
+            <div class="mb-3">
+                <label for="usuario" class="form-label">Nombre de Usuario:</label>
+                <input id="usuario" type="text" class="form-control" required/>
+            </div>
 
-    <!-- PENDIENTE AÑADIR LA SOLICITUD DE LOS PERMISOS -->
-    <div class="container my-5">
-        <div class="row justify-content-center">
-            <div class="col-md-6 bg-white p-4 rounded-4 shadow">
-                <h3 class="text-center">Regístrate</h3>
-                <form>
-                    <div class="mb-3">
-                        <label for="nombreCompleto" class="form-label">Nombre Completo:</label>
-                        <input id="nombreCompleto" type="text" class="form-control" required/>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="usuario" class="form-label">Nombre de Usuario:</label>
-                        <input id="usuario" type="text" class="form-control" required/>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Contraseña:</label>
-                        <div class="input-group">
-                            <input id="password" type="password" class="form-control" required/>
-                            <button class="btn btn-outline-secondary" type="button">Ver</button>
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="password_verifications" class="form-label">Verificar Contraseña:</label>
-                        <div class="input-group">
-                            <input id="password_verifications" type="password" class="form-control" required/>
-                            <button class="btn btn-outline-secondary" type="button">Ver</button>
-                        </div>
-                    </div>
-
-                    <!-- Selector de Nivel de Usuario -->
-                    <div class="mb-3">
-                        <label for="userLevel" class="form-label">Nivel de Usuario:</label>
-                        <select id="userLevel" class="form-select" required>
-                            <option value="" disabled selected>Selecciona un nivel de usuario</option>
-                            <option value="admin">Administrador</option>
-                            <option value="employee">Empleado</option>
-                        </select>
-                    </div>
-
-                    <div class="d-grid mb-3">
-                        <button type="submit" class="btn btn-primary">Solicitar Registro</button>
-                    </div>
-                </form>
-
-                <div class="text-center">
-                    <button class="btn btn-link" onclick="freeNavigateTo(Routes.LOGIN_PAGE)">
-                        ¿Ya tienes una cuenta?, Inicia sesión
-                    </button>
+            <div class="mb-3">
+                <label for="password" class="form-label">Contraseña:</label>
+                <div class="input-group">
+                    <input id="password" type="password" class="form-control" required/>
+                    <button class="btn btn-outline-secondary" type="button">Ver</button>
                 </div>
             </div>
+
+            <div class="mb-3">
+                <label for="password_verifications" class="form-label">Verificar Contraseña:</label>
+                <div class="input-group">
+                    <input id="password_verifications" type="password" class="form-control" required/>
+                    <button class="btn btn-outline-secondary" type="button">Ver</button>
+                </div>
+            </div>
+
+            <!-- Selector de Nivel de Usuario -->
+            <div class="mb-3">
+                <label for="userLevel" class="form-label">Nivel de Usuario:</label>
+                <select id="userLevel" class="form-select" required>
+                    <option value="" disabled selected>Selecciona un nivel de usuario</option>
+                    <option value="admin">Administrador</option>
+                    <option value="employee">Empleado</option>
+                </select>
+            </div>
+
+            <div class="d-grid mb-3">
+                <button type="submit" class="btn btn-primary">Solicitar Registro</button>
+            </div>
+        </form>
+
+        <div class="text-center">
+            <button class="btn btn-link" onclick="freeNavigateTo(Routes.LOGIN_PAGE)">
+                ¿Ya tienes una cuenta?, Inicia sesión
+            </button>
         </div>
-    </div>
+    </div> 
 
     <script type="module" src="./../../js/app_validations/auth_validations.js"></script>
     <script type="module" src="../../js/presentationVinculation.js"></script>

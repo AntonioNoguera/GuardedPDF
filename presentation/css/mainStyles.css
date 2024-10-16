@@ -40,13 +40,13 @@ body{
 }
 
 .wave2 {
-    background: url(../html/wave.svg) repeat-x;
-    position: relative;
-    width: 300%;
-    top: -198px;
-    left: 0;
-    height: 198px;
-    transform: translate(0, 0, 0); 
+  background: url(../html/wave.svg) repeat-x;
+  position: relative;
+  width: 300%;
+  top: -198px;
+  left: 0;
+  height: 198px;
+  transform: translate(0, 0, 0); 
 }
 
 .wave2 {
@@ -81,9 +81,19 @@ body{
   background:  rgba(255, 255, 255, 0.89);  
   border-radius: 20px;  
   position: absolute;  
-  max-width: 80%; 
-  left:10%;
-  right:10%;
+  max-width: 70%; 
+  left:15%;
+  right:15%;
+}
+
+.small_content{
+  z-index: 20;
+  background:  rgba(255, 255, 255, 0.89);  
+  border-radius: 20px;  
+  position: absolute;  
+  max-width: 40%; 
+  left:30%;
+  right:30%;
 }
 
 .btn-primary {
@@ -105,12 +115,11 @@ body{
   background-color: #a3a3a3; /* Cambia el color en el estado hover */
   border-color: #a3a3a3;     /* Cambia el color del borde en hover */
 }
-
+ 
 .btn-link{
   
   color: #f23d3d;
 }
-
 
 label {
   font-size: 18px;
@@ -121,10 +130,9 @@ label {
   font-weight: 500;
 }
 
+.scroll-container { 
+  height: calc(100vh - 300px); /* Ajusta 300px al tamaño necesario que ocupe el resto de contenido */
 
-/*NAV LINK STYLES*/
-.scroll-container{
-  background-color: #cfcece;
   overflow-y: auto;
   border-radius: 10px;
 } 
