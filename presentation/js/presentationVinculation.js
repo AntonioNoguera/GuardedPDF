@@ -1,5 +1,7 @@
 import { loginTest } from './app_validations/auth_validations.js';
 
+eel.testConection();
+
 const Routes = Object.freeze({
     //NODOS DE RUTA DISPONIBLE
 
