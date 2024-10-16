@@ -1,74 +1,166 @@
-import pymysql
-from peewee import *
+import eel
+from peewee_setup import *
 import datetime
-
-# Crear la base de datos si no existe
-def crear_base_datos():
-    connection = pymysql.connect(
-        host='localhost',
-        user='root',
-        password=''
-    )
-    with connection.cursor() as cursor:
-        cursor.execute("CREATE DATABASE IF NOT EXISTS safe_pdf;")
-    connection.close()
-
-# Primero, crea la base de datos
-crear_base_datos()
-
-# Conexión a la base de datos MySQL
-db = MySQLDatabase(
-    'safe_pdf',
-    user='root',
-    password='',
-    host='localhost',
-    port=3306,
-    charset='utf8mb4'
-)
-
-class BaseModel(Model):
-    class Meta:
-        database = db
-
-class Role_Table(BaseModel):
-    role_id = AutoField()
-    role_name = CharField(max_length=60, unique=True)
-    role_description = CharField(max_length=100)
-
-class User_Table(BaseModel):
-    user_id = AutoField()
-    user_name = CharField(max_length=50)
-    user_fullname = CharField(max_length=100, unique=True)
-    user_password = CharField(max_length=255)
-    user_password_salt = CharField(max_length=255)
-    user_role_id = ForeignKeyField(Role_Table, backref='users', on_delete='CASCADE')
-    user_created_at = DateTimeField(default=datetime.datetime.now)
-    user_authorized = BooleanField(default=False)
-    user_last_login = DateTimeField(default=datetime.datetime.now)
-
-class File_Table(BaseModel):
-    file_id = AutoField()
-    file_title = CharField(max_length=80)
-    file_description = CharField(max_length=100)
-    file_created_at = DateTimeField(default=datetime.datetime.now)
-    file_created_by = ForeignKeyField(User_Table, backref='files', on_delete='CASCADE')
-    file_visible_for_all = BooleanField(default=False)
-    file_is_merge = BooleanField(default=False)
-
-class Merge_Member_Table(BaseModel):
-    merge_member_id = AutoField()
-    file_id = ForeignKeyField(File_Table, backref='merge_members', on_delete='CASCADE')
-    merge_result_id = ForeignKeyField(File_Table, backref='merge_results', on_delete='CASCADE')
+from peewee import IntegrityError, DoesNotExist
 
 # Crear tablas en la base de datos
 def crear_tablas():
-    with db:
-        db.create_tables([Role_Table, User_Table, File_Table, Merge_Member_Table])
+    try:
+        with db:
+            db.create_tables([Role_Table, User_Table, File_Table, Merge_Member_Table])
+        print("Tablas creadas correctamente.")
+    except Exception as e:
+        print(f"Error al crear tablas: {e}")
 
-# Métodos Requeridos
-# (resto del código permanece igual)
+# USER
+# Insertar nuevo usuario
+@eel.expose
+def insertar_usuario(nombre, fullname, password, salt, role_id):
+    try:
+        print('Peewee create user called')
+        User_Table.create(
+            user_name=nombre,
+            user_fullname=fullname,
+            user_password=password,
+            user_password_salt=salt,
+            user_role_id=role_id
+        )
+        return {"success": True, "message": "Usuario creado correctamente."}
+    except IntegrityError as e:
+        return {"success": False, "message": f"Error al insertar usuario: {e}"}
 
-if __name__ == "__main__":
-    # Crear las tablas después de asegurar que la base de datos existe
-    crear_tablas()
-    print("Base de datos y tablas creadas correctamente")
+# Seleccionar SALT y PASSWORD por ID dado
+@eel.expose
+def obtener_salt_y_password(user_id):
+    try:
+        user = User_Table.get(User_Table.user_id == user_id)
+        return {"success": True, "salt": user.user_password_salt, "password": user.user_password}
+    except DoesNotExist:
+        return {"success": False, "message": "Usuario no encontrado."}
+
+# Actualizar estado de usuario autorizado
+@eel.expose
+def actualizar_usuario_autorizado(user_id, autorizado):
+    try:
+        user = User_Table.get(User_Table.user_id == user_id)
+        user.user_authorized = autorizado
+        user.save()
+        return {"success": True, "message": "Estado de autorización actualizado."}
+    except DoesNotExist:
+        return {"success": False, "message": "Usuario no encontrado."}
+    except Exception as e:
+        return {"success": False, "message": f"Error al actualizar estado de autorización: {e}"}
+
+# Eliminar usuario con efecto en cascada
+@eel.expose
+def eliminar_usuario(user_id):
+    try:
+        user = User_Table.get(User_Table.user_id == user_id)
+        user.delete_instance()
+        return {"success": True, "message": "Usuario eliminado correctamente."}
+    except DoesNotExist:
+        return {"success": False, "message": "Usuario no encontrado."}
+    except Exception as e:
+        return {"success": False, "message": f"Error al eliminar usuario: {e}"}
+
+# Actualizar fecha de login
+@eel.expose
+def actualizar_fecha_login(user_id):
+    try:
+        user = User_Table.get(User_Table.user_id == user_id)
+        user.user_last_login = datetime.datetime.now()
+        user.save()
+        return {"success": True, "message": "Fecha de login actualizada."}
+    except DoesNotExist:
+        return {"success": False, "message": "Usuario no encontrado."}
+    except Exception as e:
+        return {"success": False, "message": f"Error al actualizar fecha de login: {e}"}
+
+# FILE
+# Seleccionar todos los archivos
+@eel.expose
+def seleccionar_todos_archivos():
+    try:
+        return {"success": True, "files": list(File_Table.select().dicts())}
+    except Exception as e:
+        return {"success": False, "message": f"Error al seleccionar archivos: {e}"}
+
+# Seleccionar archivos por ID de usuario dado
+@eel.expose
+def seleccionar_archivos_por_usuario(user_id):
+    try:
+        return {"success": True, "files": list(File_Table.select().where(File_Table.file_created_by == user_id).dicts())}
+    except Exception as e:
+        return {"success": False, "message": f"Error al seleccionar archivos por usuario: {e}"}
+
+# Eliminar archivo con efecto en cascada
+@eel.expose
+def eliminar_archivo(file_id):
+    try:
+        file = File_Table.get(File_Table.file_id == file_id)
+        file.delete_instance()
+        return {"success": True, "message": "Archivo eliminado correctamente."}
+    except DoesNotExist:
+        return {"success": False, "message": "Archivo no encontrado."}
+    except Exception as e:
+        return {"success": False, "message": f"Error al eliminar archivo: {e}"}
+
+# Insertar nuevo archivo
+@eel.expose
+def insertar_archivo(titulo, descripcion, creado_por, visible_para_todos=False, es_union=False):
+    try:
+        File_Table.create(
+            file_title=titulo,
+            file_description=descripcion,
+            file_created_by=creado_por,
+            file_visible_for_all=visible_para_todos,
+            file_is_merge=es_union
+        )
+        return {"success": True, "message": "Archivo creado correctamente."}
+    except Exception as e:
+        return {"success": False, "message": f"Error al insertar archivo: {e}"}
+
+# Insertar nuevo miembro de unión
+@eel.expose
+def insertar_miembro_union(file_id, merge_result_id):
+    try:
+        Merge_Member_Table.create(
+            file_id=file_id,
+            merge_result_id=merge_result_id
+        )
+        return {"success": True, "message": "Miembro de unión insertado correctamente."}
+    except Exception as e:
+        return {"success": False, "message": f"Error al insertar miembro de unión: {e}"}
+
+# Insertar nuevo archivo de unión con historia de unión
+@eel.expose
+def insertar_nuevo_merge(titulo, descripcion, creado_por, miembros):
+    try:
+        merge_result = insertar_archivo(titulo, descripcion, creado_por, es_union=True)
+        for miembro in miembros:
+            insertar_miembro_union(miembro, merge_result.file_id)
+        return {"success": True, "message": "Unión creada correctamente."}
+    except Exception as e:
+        return {"success": False, "message": f"Error al insertar nuevo merge: {e}"}
+
+# Seleccionar todos los merges
+@eel.expose
+def seleccionar_todos_merges():
+    try:
+        return {"success": True, "merges": list(File_Table.select().where(File_Table.file_is_merge == True).dicts())}
+    except Exception as e:
+        return {"success": False, "message": f"Error al seleccionar merges: {e}"}
+
+# MERGE
+# Obtener todos los merges
+@eel.expose
+def obtener_todos_los_merges():
+    try:
+        return {"success": True, "merges": list(Merge_Member_Table.select().dicts())}
+    except Exception as e:
+        return {"success": False, "message": f"Error al obtener merges: {e}"}
+
+# Test de conexión
+@eel.expose
+def testConection():
+    print('Conectado')
