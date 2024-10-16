@@ -5,7 +5,7 @@ import datetime
 # Crear tablas en la base de datos
 def crear_tablas():
     with db:
-        db.create_tables([RoleTable, UserTable, FileTable, MergeMemberTable])
+        db.create_tables([Role_Table, User_Table, File_Table, Merge_Member_Table])
 
 # Métodos Requeridos
 
@@ -13,7 +13,8 @@ def crear_tablas():
 # Insertar nuevo usuario
 @eel.expose
 def insertar_usuario(nombre, fullname, password, salt, role_id):
-    UserTable.create(
+    print('Peewee create user called')
+    User_Table.create(
         user_name=nombre,
         user_fullname=fullname,
         user_password=password,
@@ -24,26 +25,26 @@ def insertar_usuario(nombre, fullname, password, salt, role_id):
 # Seleccionar SALT y PASSWORD por ID dado
 @eel.expose
 def obtener_salt_y_password(user_id):
-    user = UserTable.get(UserTable.user_id == user_id)
+    user = User_Table.get(User_Table.user_id == user_id)
     return user.user_password_salt, user.user_password
 
 # Actualizar estado de usuario autorizado
 @eel.expose
 def actualizar_usuario_autorizado(user_id, autorizado):
-    user = UserTable.get(UserTable.user_id == user_id)
+    user = User_Table.get(User_Table.user_id == user_id)
     user.user_authorized = autorizado
     user.save()
 
 # Eliminar usuario con efecto en cascada
 @eel.expose
 def eliminar_usuario(user_id):
-    user = UserTable.get(UserTable.user_id == user_id)
+    user = User_Table.get(User_Table.user_id == user_id)
     user.delete_instance()
 
 # Actualizar fecha de login
 @eel.expose
 def actualizar_fecha_login(user_id):
-    user = UserTable.get(UserTable.user_id == user_id)
+    user = User_Table.get(User_Table.user_id == user_id)
     user.user_last_login = datetime.datetime.now()
     user.save()
 
@@ -51,23 +52,23 @@ def actualizar_fecha_login(user_id):
 # Seleccionar todos los archivos
 @eel.expose
 def seleccionar_todos_archivos():
-    return list(FileTable.select().dicts())
+    return list(File_Table.select().dicts())
 
 # Seleccionar archivos por ID de usuario dado
 @eel.expose
 def seleccionar_archivos_por_usuario(user_id):
-    return list(FileTable.select().where(FileTable.file_created_by == user_id).dicts())
+    return list(File_Table.select().where(File_Table.file_created_by == user_id).dicts())
 
 # Eliminar archivo con efecto en cascada
 @eel.expose
 def eliminar_archivo(file_id):
-    file = FileTable.get(FileTable.file_id == file_id)
+    file = File_Table.get(File_Table.file_id == file_id)
     file.delete_instance()
 
 # Insertar nuevo archivo
 @eel.expose
 def insertar_archivo(titulo, descripcion, creado_por, visible_para_todos=False, es_union=False):
-    FileTable.create(
+    File_Table.create(
         file_title=titulo,
         file_description=descripcion,
         file_created_by=creado_por,
@@ -78,7 +79,7 @@ def insertar_archivo(titulo, descripcion, creado_por, visible_para_todos=False, 
 # Insertar nuevo miembro de unión
 @eel.expose
 def insertar_miembro_union(file_id, merge_result_id):
-    MergeMemberTable.create(
+    Merge_Member_Table.create(
         file_id=file_id,
         merge_result_id=merge_result_id
     )
@@ -93,13 +94,13 @@ def insertar_nuevo_merge(titulo, descripcion, creado_por, miembros):
 # Seleccionar todos los merges
 @eel.expose
 def seleccionar_todos_merges():
-    return list(FileTable.select().where(FileTable.file_is_merge == True).dicts())
+    return list(File_Table.select().where(File_Table.file_is_merge == True).dicts())
 
 # MERGE
 # Obtener todos los merges
 @eel.expose
 def obtener_todos_los_merges():
-    return list(MergeMemberTable.select().dicts())
+    return list(Merge_Member_Table.select().dicts())
 
 @eel.expose
 def testConection():

@@ -1,3 +1,3 @@
-export function loginTest(data) {
+export function registerValidation(data) {
     return true;
 }

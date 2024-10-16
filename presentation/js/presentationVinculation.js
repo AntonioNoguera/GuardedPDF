@@ -1,4 +1,8 @@
+//Importing Presentation Validations
 import { loginTest } from './app_validations/auth_validations.js';
+
+//Importanting Data Methods
+import { userUseCase } from './use_cases/users.js';
 
 eel.testConection();
 
@@ -23,9 +27,12 @@ function navigateTo (data, content) {
     switch (data) {
         
         case Routes.REGISTER_PAGE:
-            
+            //el primer hace toda la logica de la ejecución
+
+            //el segundo hace el llamado al "caso de uso"
             if(loginTest(content)){
-                freeNavigateTo(Routes.REGISTER_PAGE);
+                userUseCase.createUser("topName","topFullName");
+                //freeNavigateTo(Routes.REGISTER_PAGE);
             }
 
             break;
@@ -66,6 +73,7 @@ function navigateTo (data, content) {
 }
 
 
+
 const App = {
     navigateTo,
     Routes,
@@ -77,3 +85,4 @@ window.App = App;
 window.navigateTo = navigateTo;
 window.Routes = Routes;
 window.freeNavigateTo = freeNavigateTo;
+
