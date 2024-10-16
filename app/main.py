@@ -1,5 +1,4 @@
-import eel
-import router as router
+import eel 
 
 eel.init('../presentation', allowed_extensions=['.js','.html','.css'])
 
