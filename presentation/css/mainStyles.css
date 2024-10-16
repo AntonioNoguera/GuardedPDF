@@ -81,7 +81,9 @@ body{
   background:  rgba(255, 255, 255, 0.89);  
   border-radius: 20px;  
   position: absolute;  
-  max-width: 90%; 
+  max-width: 80%; 
+  left:10%;
+  right:10%;
 }
 
 .btn-primary {
