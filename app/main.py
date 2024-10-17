@@ -164,3 +164,11 @@ def obtener_todos_los_merges():
 @eel.expose
 def testConection():
     print('Conectado')
+
+# Inicializar Eel
+eel.init('../presentation', allowed_extensions=['.js', '.html', '.css'])
+
+# Iniciar la aplicación
+if __name__ == "__main__":
+    crear_tablas()
+    eel.start('/html/auth/index.html', size=(3000, 3000), position=(500, 500))
