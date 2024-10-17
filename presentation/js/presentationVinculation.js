@@ -1,5 +1,5 @@
 //Importing Presentation Validations
-import { loginTest } from './app_validations/auth_validations.js';
+import { registerValidation } from './app_validations/auth_validations.js';
 
 //Importanting Data Methods
 import { userUseCase } from './use_cases/users.js';
@@ -30,7 +30,7 @@ function navigateTo (data, content) {
             //el primer hace toda la logica de la ejecución
 
             //el segundo hace el llamado al "caso de uso"
-            if(loginTest(content)){
+            if(registerValidation(content)){
                 userUseCase.createUser("topName","topFullName");
                 //freeNavigateTo(Routes.REGISTER_PAGE);
             }
