@@ -3,11 +3,10 @@ import { registerValidation } from './app_validations/auth_validations.js';
 
 //Importanting Data Methods
 import { userUseCase } from './use_cases/users.js';
+import { fileUseCase } from './use_cases/files.js';
+import { mergeUseCase } from './use_cases/merges.js';
 
-eel.testConection();
-
-const Routes = Object.freeze({
-    //NODOS DE RUTA DISPONIBLE
+const Routes = Object.freeze({ 
 
     REGISTER_PAGE: '/html/auth/register_page.html',
     LOGIN_PAGE: '/html/auth/index.html',
@@ -26,8 +25,7 @@ function freeNavigateTo(data) {
 function navigateTo (data, content) {
     switch (data) {
         
-        case Routes.REGISTER_PAGE:
-            //el primer hace toda la logica de la ejecución
+        case Routes.REGISTER_PAGE: 
 
             //el segundo hace el llamado al "caso de uso"
             if(registerValidation(content)){
@@ -85,4 +83,3 @@ window.App = App;
 window.navigateTo = navigateTo;
 window.Routes = Routes;
 window.freeNavigateTo = freeNavigateTo;
-
