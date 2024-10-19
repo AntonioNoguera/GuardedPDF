@@ -1,3 +1,4 @@
+
 //Importing Presentation Validations
 import { registerValidation, loginValidations } from './app_validations/auth_validations.js';
 
@@ -7,7 +8,6 @@ import { fileUseCase } from './use_cases/files.js';
 import { mergeUseCase } from './use_cases/merges.js';
 
 const Routes = Object.freeze({ 
-
     REGISTER_PAGE: '/html/auth/register_page.html',
     LOGIN_PAGE: '/html/auth/index.html',
 
@@ -22,18 +22,13 @@ function freeNavigateTo(data) {
     window.location.href = data;
 }
 
-
 //Navigations
 function navigateTo (data, content) {
     switch (data) {
         
         case Routes.REGISTER_PAGE: 
 
-            //el segundo hace el llamado al "caso de uso"
-            //if(registerValidation(content)){
-                //userUseCase.createUser("topName","topFullName");
-                freeNavigateTo(Routes.REGISTER_PAGE);
-            //}
+            freeNavigateTo(Routes.REGISTER_PAGE);
 
             break;
 
@@ -67,7 +62,7 @@ function navigateTo (data, content) {
 
             break;
     
-    default:
+        default:
             console.log("Not in a case");
     }
 }
@@ -76,8 +71,9 @@ function navigateTo (data, content) {
 
 // UseCaseAplications
 function runUseCase( caseEndpoint, content ) {
-    //User Use Case
+    
     switch (caseEndpoint) {
+        
         case "addNewUser" :
             if (registerValidation(content)) {
                 userUseCase.createUser(content);
@@ -95,8 +91,78 @@ function runUseCase( caseEndpoint, content ) {
             break;
 
         case "getAllUsers" :
-            console.log(userUseCase.getActiveAndInactiveUsers());
+            userUseCase.getActiveAndInactiveUsers()
+                .then((readedData) => {
+                    if (readedData) {
+                        console.log(readedData);
+                    
+                        // Actualiza el texto de los botones con los contadores
+                        document.getElementById('activeUserBtn').innerHTML = "Usuarios Activos ( " + readedData.usuarios_activos.length + " )";
+                        document.getElementById('newPetitionsBtn').innerHTML = "Nuevas Peticiones ( " + readedData.usuarios_inactivos.length + " )";
+                    
+                        // Selecciona el cuerpo de la tabla de usuarios activos
+                        const tableActiveBody = document.querySelector('#table_active tbody');
+                        
+                        const tablePetitionBody = document.querySelector('#table_petitions tbody');
+                        
+                        // Limpia cualquier contenido previo en el cuerpo de la tabla
+                        tableActiveBody.innerHTML = '';
+                    
+                        // Recorre el arreglo de usuarios activos y genera las filas
+                        readedData.usuarios_activos.forEach((usuario, index) => {
+                            // Crea una nueva fila
+                            const row = document.createElement('tr');
+                            
+                            // Define el contenido de la fila
+                            row.innerHTML = ` 
+                                <td class="text-center">${usuario.user_id}</td>
+                                <td class="text-left">${usuario.user_fullname}</td>
+                                <td class="text-center">${usuario.user_name}</td>
+                                <td class="text-center">${usuario.user_created_at ? usuario.user_created_at : 'Date Null'}</td>
+                                <td class="text-center">${usuario.user_role_id ? 'Admin' : 'N'}</td>
+                                <td class="text-center">
+                                    <a href="#" class="btn btn-primary btn-sm w-45">Aceptar</a>
+                                    <a href="#" class="btn btn-secondary btn-sm w-45">Denegar</a>
+                                </td>
+                            `;
+                            
+                            // Agrega la fila a la tabla
+                            tableActiveBody.appendChild(row);
+                        });
 
+                        // Limpia cualquier contenido previo en el cuerpo de la tabla
+                        tablePetitionBody.innerHTML = '';
+                    
+                        // Recorre el arreglo de usuarios activos y genera las filas
+                        readedData.usuarios_inactivos.forEach((usuario, index) => {
+
+                            // Crea una nueva fila
+                            const row = document.createElement('tr');
+                            
+                            // Define el contenido de la fila
+                            row.innerHTML = ` 
+                                <td class="text-center">${usuario.user_id}</td>
+                                <td class="text-left">${usuario.user_fullname}</td>
+                                <td class="text-center">${usuario.user_name}</td>
+                                <td class="text-center">${usuario.user_created_at ? usuario.user_created_at : 'Date Null'}</td>
+                                <td class="text-center">${usuario.user_role_id ? 'Admin' : 'N'}</td>
+                                <td class="text-center">
+                                    <a href="#" class="btn btn-primary btn-sm w-45">Aceptar</a>
+                                    <a href="#" class="btn btn-secondary btn-sm w-45">Denegar</a>
+                                </td>
+                            `;
+                            
+                            // Agrega la fila a la tabla
+                            tablePetitionBody.appendChild(row);
+                        });
+                    
+                    } else {
+                        console.error("No se recibieron datos");
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error al obtener los usuarios activos e inactivos:", error);
+                });
             break;
 
         default :

@@ -119,14 +119,7 @@ export const userUseCase = {
             // Llamada correcta a la función expuesta de Eel (nota los paréntesis vacíos)
             const result = await eel.obtener_usuarios_activos_e_inactivos()();
             
-            if (result.success) {
-                console.log(result);
-    
-                // Mostrar usuarios activos e inactivos
-                console.log("Usuarios activos:", result.usuarios_activos);
-                console.log("Usuarios inactivos:", result.usuarios_inactivos);
-    
-                // Retorna el resultado para que pueda ser usado en otros contextos si es necesario
+            if (result.success) { 
                 return result;
             } else {
                 alert(result.message);

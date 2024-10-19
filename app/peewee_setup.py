@@ -46,6 +46,21 @@ class User_Table(BaseModel):
     user_authorized = BooleanField(default=False)
     user_last_login = DateTimeField(default=datetime.datetime.now)
 
+    # Método para convertir a un diccionario con fechas en formato ISO
+    def to_dict(self):
+        return {
+            'user_id': self.user_id,
+            'user_name': self.user_name,
+            'user_fullname': self.user_fullname,
+            'user_password': self.user_password,
+            'user_password_salt': self.user_password_salt,
+            'user_role_id': self.user_role_id.id,  # Serializa solo el ID del rol
+            'user_created_at': self.user_created_at.isoformat() if self.user_created_at else None,
+            'user_authorized': self.user_authorized,
+            'user_last_login': self.user_last_login.isoformat() if self.user_last_login else None,
+        }
+    
+
 class File_Table(BaseModel):
     file_id = AutoField()
     file_title = CharField(max_length=80)

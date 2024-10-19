@@ -81,11 +81,9 @@ def actualizar_fecha_login(user_id):
 def obtener_usuarios_activos_e_inactivos():
     try:
         # Obtener usuarios activos (autorizados)
-        usuarios_activos = list(User_Table.select().where(User_Table.user_authorized == True).dicts())
-
-        # Obtener usuarios inactivos (no autorizados)
-        usuarios_inactivos = list(User_Table.select().where(User_Table.user_authorized == False).dicts())
-
+        # Luego, puedes utilizarlo de la siguiente manera
+        usuarios_activos = [user.to_dict() for user in User_Table.select().where(User_Table.user_authorized == True)]
+        usuarios_inactivos = [user.to_dict() for user in User_Table.select().where(User_Table.user_authorized == False)]
         return {
             "success": True,
             "usuarios_activos": usuarios_activos,
