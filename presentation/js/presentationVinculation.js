@@ -1,5 +1,5 @@
 //Importing Presentation Validations
-import { registerValidation } from './app_validations/auth_validations.js';
+import { registerValidation, loginValidations } from './app_validations/auth_validations.js';
 
 //Importanting Data Methods
 import { userUseCase } from './use_cases/users.js';
@@ -86,7 +86,7 @@ function runUseCase( caseEndpoint, content) {
             break;
         
         case "tryLogin" : 
-            if (registerValidation(content)) {
+            if (loginValidations(content)) {
                 userUseCase.verifyUserPassword(content);
             }
 

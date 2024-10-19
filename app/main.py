@@ -31,9 +31,9 @@ def insertar_usuario(nombre, fullname, password, salt, role_id):
 
 # Seleccionar SALT y PASSWORD por ID dado
 @eel.expose
-def obtener_salt_y_password(user_id): 
+def obtener_salt_y_password(user_name): 
     try:
-        user = User_Table.get((User_Table.user_id == user_id) & (User_Table.user_authorized == True))
+        user = User_Table.get((User_Table.user_name == user_name) & (User_Table.user_authorized == True))
         return {"success": True, "salt": user.user_password_salt, "password": user.user_password}
     except DoesNotExist:
         return {"success": False, "message": "Usuario no encontrado."}
@@ -67,12 +67,12 @@ def eliminar_usuario(user_id):
 @eel.expose
 def actualizar_fecha_login(user_id):
     try:
-        user = User_Table.get(User_Table.user_id == user_id)
+        user = User_Table.get(User_Table.user_name == user_id)
         user.user_last_login = datetime.datetime.now()
         user.save()
         return {"success": True, "message": "Fecha de login actualizada."}
     except DoesNotExist:
-        return {"success": False, "message": "Usuario no encontrado."}
+        return {"success": False, "message": "Ussuario no encontrado."}
     except Exception as e:
         return {"success": False, "message": f"Error al actualizar fecha de login: {e}"}
 

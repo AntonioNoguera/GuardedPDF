@@ -68,6 +68,9 @@ export const userUseCase = {
     
                 if (hashHex === storedHash) {
                     alert("Password is correct");
+    
+                    // Actualizar la fecha de login del usuario
+                    await this.updateLoginDate(userId);
                 } else {
                     alert("Incorrect password");
                 }
@@ -80,6 +83,16 @@ export const userUseCase = {
         }
     },
     
+    // Actualizar fecha de login del usuario
+    updateLoginDate: async function(userId) {
+        try {
+            const result = await eel.actualizar_fecha_login(userId)();
+            alert("Fecha Actualizada: " + result.message);
+        } catch (error) {
+            console.error("Error al actualizar la fecha de login:", error);
+            alert("Ocurrió un error al actualizar la fecha de login.");
+        }
+    },
 
     // Actualizar estado autorizado de usuario
     updateUserAuthorization: function(userId, isAuthorized) {
@@ -93,12 +106,5 @@ export const userUseCase = {
         eel.eliminar_usuario(userId).then(result => {
             alert(result.message);
         });
-    },
-
-    // Actualizar fecha de login del usuario
-    updateLoginDate: function(userId) {
-        eel.actualizar_fecha_login(userId).then(result => {
-            alert(result.message);
-        });
-    }
+    },    
 };
