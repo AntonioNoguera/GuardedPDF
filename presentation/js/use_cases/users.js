@@ -47,7 +47,7 @@ export const userUseCase = {
     
             if (!userId || !enteredPassword) {
                 alert("Por favor ingrese usuario y contraseña.");
-                return;
+                return false; // Retorna false si faltan datos
             }
     
             // Llamada a Eel para obtener el salt y la contraseña hasheada
@@ -71,17 +71,23 @@ export const userUseCase = {
     
                     // Actualizar la fecha de login del usuario
                     await this.updateLoginDate(userId);
+    
+                    return true;  // Retorna true si todo es correcto
                 } else {
                     alert("Incorrect password");
+                    return false;  // Retorna false si la contraseña es incorrecta
                 }
             } else {
                 alert(result.message);
+                return false;  // Retorna false si hay algún problema con el usuario
             }
         } catch (error) {
             console.error("Error en la verificación:", error);
             alert("Ocurrió un error durante la verificación del usuario.");
+            return false;  // Retorna false si ocurre un error inesperado
         }
     },
+    
     
     // Actualizar fecha de login del usuario
     updateLoginDate: async function(userId) {
@@ -107,4 +113,30 @@ export const userUseCase = {
             alert(result.message);
         });
     },    
+
+    getActiveAndInactiveUsers: async function() {
+        try {
+            // Llamada correcta a la función expuesta de Eel (nota los paréntesis vacíos)
+            const result = await eel.obtener_usuarios_activos_e_inactivos()();
+            
+            if (result.success) {
+                console.log(result);
+    
+                // Mostrar usuarios activos e inactivos
+                console.log("Usuarios activos:", result.usuarios_activos);
+                console.log("Usuarios inactivos:", result.usuarios_inactivos);
+    
+                // Retorna el resultado para que pueda ser usado en otros contextos si es necesario
+                return result;
+            } else {
+                alert(result.message);
+            }
+        } catch (error) {
+            console.error("Error al obtener usuarios activos e inactivos:", error);
+            alert("Ocurrió un error al obtener usuarios.");
+        }
+    }
+    
+
+    
 };

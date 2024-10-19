@@ -125,6 +125,13 @@
  
     <script type="module" src="./../../js/app_validations/auth_validations.js"></script>
     <script type="module" src="../../js/presentationVinculation.js"></script>
+    <script>
+        // Espera a que el contenido del DOM esté completamente cargado
+        window.onload = async function() {
+            // Llama a la función runUseCase cuando la página esté cargada
+            await runUseCase('getAllUsers');
+        };
+    </script>
     
 </body>
 </html>

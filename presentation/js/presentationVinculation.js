@@ -75,7 +75,7 @@ function navigateTo (data, content) {
 
 
 // UseCaseAplications
-function runUseCase( caseEndpoint, content) {
+function runUseCase( caseEndpoint, content ) {
     //User Use Case
     switch (caseEndpoint) {
         case "addNewUser" :
@@ -87,8 +87,15 @@ function runUseCase( caseEndpoint, content) {
         
         case "tryLogin" : 
             if (loginValidations(content)) {
-                userUseCase.verifyUserPassword(content);
+                if (userUseCase.verifyUserPassword(content)) {
+                    freeNavigateTo(Routes.FILES_PAGE);
+                }
             }
+
+            break;
+
+        case "getAllUsers" :
+            console.log(userUseCase.getActiveAndInactiveUsers());
 
             break;
 
@@ -97,8 +104,6 @@ function runUseCase( caseEndpoint, content) {
             break;
     }
 }
-
-
 
 const App = {
     navigateTo,

@@ -76,6 +76,24 @@ def actualizar_fecha_login(user_id):
     except Exception as e:
         return {"success": False, "message": f"Error al actualizar fecha de login: {e}"}
 
+# Obtener usuarios activos e inactivos en la misma función
+@eel.expose
+def obtener_usuarios_activos_e_inactivos():
+    try:
+        # Obtener usuarios activos (autorizados)
+        usuarios_activos = list(User_Table.select().where(User_Table.user_authorized == True).dicts())
+
+        # Obtener usuarios inactivos (no autorizados)
+        usuarios_inactivos = list(User_Table.select().where(User_Table.user_authorized == False).dicts())
+
+        return {
+            "success": True,
+            "usuarios_activos": usuarios_activos,
+            "usuarios_inactivos": usuarios_inactivos
+        }
+    except Exception as e:
+        return {"success": False, "message": f"Error al obtener usuarios: {e}"}
+
 # FILE
 # Seleccionar todos los archivos
 @eel.expose
