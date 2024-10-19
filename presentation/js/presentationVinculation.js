@@ -22,16 +22,18 @@ function freeNavigateTo(data) {
     window.location.href = data;
 }
 
+
+//Navigations
 function navigateTo (data, content) {
     switch (data) {
         
         case Routes.REGISTER_PAGE: 
 
             //el segundo hace el llamado al "caso de uso"
-            if(registerValidation(content)){
-                userUseCase.createUser("topName","topFullName");
-                //freeNavigateTo(Routes.REGISTER_PAGE);
-            }
+            //if(registerValidation(content)){
+                //userUseCase.createUser("topName","topFullName");
+                freeNavigateTo(Routes.REGISTER_PAGE);
+            //}
 
             break;
 
@@ -72,6 +74,32 @@ function navigateTo (data, content) {
 
 
 
+// UseCaseAplications
+function runUseCase( caseEndpoint, content) {
+    //User Use Case
+    switch (caseEndpoint) {
+        case "addNewUser" :
+            if (registerValidation(content)) {
+                userUseCase.createUser(content);
+            }
+            
+            break;
+        
+        case "tryLogin" : 
+            if (registerValidation(content)) {
+                userUseCase.verifyUserPassword(content);
+            }
+
+            break;
+
+        default :
+            alert("Unsoported ");
+            break;
+    }
+}
+
+
+
 const App = {
     navigateTo,
     Routes,
@@ -83,3 +111,4 @@ window.App = App;
 window.navigateTo = navigateTo;
 window.Routes = Routes;
 window.freeNavigateTo = freeNavigateTo;
+window.runUseCase = runUseCase;

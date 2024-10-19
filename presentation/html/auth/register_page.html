@@ -30,7 +30,8 @@
  
     <div class="small_content w-45 my-5 p-4"> 
         <h3 class="text-center">Regístrate</h3>
-        <form>
+        
+        <form id="registerForm">
             <div class="mb-3">
                 <label for="nombreCompleto" class="form-label">Nombre Completo:</label>
                 <input id="nombreCompleto" type="text" class="form-control" />
@@ -40,38 +41,38 @@
                 <label for="usuario" class="form-label">Nombre de Usuario:</label>
                 <input id="usuario" type="text" class="form-control" />
             </div>
-
+        
             <div class="mb-3">
                 <label for="password" class="form-label">Contraseña:</label>
                 <div class="input-group">
                     <input id="password" type="password" class="form-control" />
-                    <button class="btn btn-outline-secondary" type="button">Ver</button>
+                    <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('password')">Ver</button>
                 </div>
             </div>
-
+        
             <div class="mb-3">
                 <label for="password_verifications" class="form-label">Verificar Contraseña:</label>
                 <div class="input-group">
                     <input id="password_verifications" type="password" class="form-control" />
-                    <button class="btn btn-outline-secondary" type="button">Ver</button>
+                    <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('password_verifications')">Ver</button>
                 </div>
             </div>
-
-            <!-- Selector de Nivel de Usuario -->
+        
             <div class="mb-3">
                 <label for="userLevel" class="form-label">Nivel de Usuario:</label>
-                <select id="userLevel" class="form-select" >
+                <select id="userLevel" class="form-select">
                     <option value="" disabled selected>Selecciona un nivel de usuario</option>
                     <option value="admin">Administrador</option>
                     <option value="employee">Empleado</option>
                 </select>
             </div>
-
+        
             <div class="d-grid mb-3">
                 <button type="submit" class="btn btn-primary">Solicitar Registro</button>
             </div>
         </form>
 
+        
         <div class="text-center">
             <button class="btn btn-link" onclick="freeNavigateTo(Routes.LOGIN_PAGE)">
                 ¿Ya tienes una cuenta?, Inicia sesión
@@ -81,6 +82,35 @@
 
     <script type="module" src="./../../js/app_validations/auth_validations.js"></script>
     <script type="module" src="../../js/presentationVinculation.js"></script>
+
+    <script>
+        // Función para mostrar/ocultar contraseñas
+        function togglePassword(id) {
+            const input = document.getElementById(id);
+            if (input.type === "password") {
+                input.type = "text";
+            } else {
+                input.type = "password";
+            }
+        }
+    
+        // Escuchar el envío del formulario
+        document.getElementById('registerForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Evita el envío del formulario
+    
+            // Recoger los valores de los inputs
+            const content = {
+                nombreCompleto: document.getElementById('nombreCompleto').value,
+                usuario: document.getElementById('usuario').value,
+                password: document.getElementById('password').value,
+                password_verifications: document.getElementById('password_verifications').value,
+                userLevel: document.getElementById('userLevel').value
+            };
+    
+            // Enviar los valores a la función runUseCase
+            runUseCase('addNewUser', content);
+        });
+    </script>
     
 </body>
 </html>

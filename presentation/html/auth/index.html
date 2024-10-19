@@ -30,38 +30,58 @@
     <div class="small_content p-4 my-5"> 
         <p class="h3 text-center mb-4">Inicia Sesión</p>
 
-        <form>
+        <form id="loginForm">
             <div class="mb-3">
                 <label for="usuario" class="form-label">Usuario:</label>
                 <input id="usuario" class="form-control" type="text" />
             </div>
-
+        
             <div class="mb-3">
                 <label for="password" class="form-label">Contraseña:</label>
                 <div class="input-group">
                     <input id="password" class="form-control" type="password" />
-                    <button class="btn btn-outline-secondary" type="button">Ver</button>
+                    <button class="btn btn-outline-secondary" type="button" onclick="togglePassword()">Ver</button>
                 </div>
             </div>
-
+        
             <div class="row">
-                <div class="col-md-6 mb-2">
-                    <button class="btn btn-secondary w-100">Iniciar Sesión</button>
-                </div>
-                <div class="col-md-6 mb-2">
-                    <button class="btn btn-primary w-100" onclick="navigateTo(Routes.FILES_PAGE)">Iniciar Sesión</button>
+                <div class="col-md-12 mb-2">
+                    <button class="btn btn-primary w-100"  type="submit">Iniciar Sesión</button>
                 </div>
             </div>
-
+        
             <div class="text-center mt-3">
-                <button class="btn btn-link" onclick="navigateTo(Routes.REGISTER_PAGE, true)">
+                <button class="btn btn-link" type="button" onclick="freeNavigateTo(Routes.REGISTER_PAGE, true)">
                     ¿Nuevo en la plataforma? Crea una cuenta
                 </button> 
             </div>
-        </form> 
+        </form>
+        
     </div> 
 
     <script type="module" src="./../../js/app_validations/auth_validations.js"></script>
     <script type="module" src="../../js/presentationVinculation.js"></script>
+
+    <script>
+        function togglePassword() {
+            const passwordField = document.getElementById("password");
+            const type = passwordField.type === "password" ? "text" : "password";
+            passwordField.type = type;
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', function (event) {
+
+            event.preventDefault(); // Evita el envío del formulario
+    
+            // Recoger los valores de los inputs
+            const content = {
+                usuario: document.getElementById('usuario').value,
+                password: document.getElementById('password').value, 
+            };
+
+            // Enviar los valores a la función runUseCase
+            runUseCase('tryLogin', content);
+        });
+    </script>
 </body>
 </html>
