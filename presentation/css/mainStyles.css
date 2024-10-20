@@ -81,9 +81,9 @@ body{
   background:  rgba(255, 255, 255, 0.89);  
   border-radius: 20px;  
   position: absolute;  
-  max-width: 70%; 
-  left:15%;
-  right:15%;
+  max-width: 80%; 
+  left:10%;
+  right:10%;
 }
 
 .small_content{
@@ -161,4 +161,9 @@ label {
   text-decoration: none;
   
   color : #400101;
+}
+
+table tr th, 
+table tr td {
+  vertical-align: middle; /* Centra verticalmente el contenido en las celdas */
 }

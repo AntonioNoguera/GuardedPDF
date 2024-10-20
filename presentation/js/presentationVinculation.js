@@ -1,8 +1,7 @@
-
 //Importing Presentation Validations
 import { registerValidation, loginValidations } from './app_validations/auth_validations.js';
 
-//Importanting Data Methods
+//Importing Data Methods
 import { userUseCase } from './use_cases/users.js';
 import { fileUseCase } from './use_cases/files.js';
 import { mergeUseCase } from './use_cases/merges.js';
@@ -17,6 +16,17 @@ const Routes = Object.freeze({
 
     ADMIN_PAGE: '../../html/user_administration/user_admin_page.html',
 });
+  
+
+// Opciones de formato para la fecha con mes abreviado y formato 24h
+const options = { 
+    year: 'numeric', 
+    month: 'short', // Abrevia el mes (Ejemplo: Ene, Feb, Mar)
+    day: 'numeric', 
+    hour: '2-digit', 
+    minute: '2-digit', 
+    hour12: false // Usa formato de 24 horas
+};
 
 function freeNavigateTo(data) { 
     window.location.href = data;
@@ -25,41 +35,28 @@ function freeNavigateTo(data) {
 //Navigations
 function navigateTo (data, content) {
     switch (data) {
-        
         case Routes.REGISTER_PAGE: 
-
             freeNavigateTo(Routes.REGISTER_PAGE);
-
             break;
 
         case Routes.LOGIN_PAGE:
-             
             freeNavigateTo(Routes.LOGIN_PAGE); 
-
             break;
 
         case Routes.FILES_PAGE:
-             
             freeNavigateTo(Routes.FILES_PAGE); 
-
             break; 
         
         case Routes.HISTORY_PAGE:
-                
             freeNavigateTo(Routes.HISTORY_PAGE); 
-
             break;
 
         case Routes.MERGE_PAGE:
-             
             freeNavigateTo(Routes.MERGE_PAGE); 
-
             break;
 
         case Routes.ADMIN_PAGE:
-             
             freeNavigateTo(Routes.ADMIN_PAGE); 
-
             break;
     
         default:
@@ -67,30 +64,26 @@ function navigateTo (data, content) {
     }
 }
 
-
-
 // UseCaseAplications
-function runUseCase( caseEndpoint, content ) {
+function runUseCase(caseEndpoint, content) { 
     
     switch (caseEndpoint) {
-        
-        case "addNewUser" :
+        case "addNewUser":
             if (registerValidation(content)) {
                 userUseCase.createUser(content);
             }
-            
             break;
         
-        case "tryLogin" : 
+        case "tryLogin": 
             if (loginValidations(content)) {
                 if (userUseCase.verifyUserPassword(content)) {
                     freeNavigateTo(Routes.FILES_PAGE);
                 }
             }
-
             break;
 
-        case "getAllUsers" :
+        case "getAllUsers": 
+
             userUseCase.getActiveAndInactiveUsers()
                 .then((readedData) => {
                     if (readedData) {
@@ -102,60 +95,96 @@ function runUseCase( caseEndpoint, content ) {
                     
                         // Selecciona el cuerpo de la tabla de usuarios activos
                         const tableActiveBody = document.querySelector('#table_active tbody');
-                        
                         const tablePetitionBody = document.querySelector('#table_petitions tbody');
                         
                         // Limpia cualquier contenido previo en el cuerpo de la tabla
                         tableActiveBody.innerHTML = '';
                     
                         // Recorre el arreglo de usuarios activos y genera las filas
-                        readedData.usuarios_activos.forEach((usuario, index) => {
+                        readedData.usuarios_activos.forEach((usuario) => {
                             // Crea una nueva fila
-                            const row = document.createElement('tr');
+                            let row = document.createElement('tr');
+                            let formattedDate = (new Date(usuario.user_created_at)).toLocaleDateString('es-ES', options); 
                             
                             // Define el contenido de la fila
-                            row.innerHTML = ` 
-                                <td class="text-center">${usuario.user_id}</td>
+                            row.innerHTML = `  
                                 <td class="text-left">${usuario.user_fullname}</td>
-                                <td class="text-center">${usuario.user_name}</td>
-                                <td class="text-center">${usuario.user_created_at ? usuario.user_created_at : 'Date Null'}</td>
-                                <td class="text-center">${usuario.user_role_id ? 'Admin' : 'N'}</td>
+                                <td class="text-left">${usuario.user_name}</td>
+                                <td class="text-center">${formattedDate}</td>
+                                <td class="text-center">${usuario.user_role_id ? 'Administrador' : 'Usuario Estándar'}</td>
                                 <td class="text-center">
-                                    <a href="#" class="btn btn-primary btn-sm w-45">Aceptar</a>
-                                    <a href="#" class="btn btn-secondary btn-sm w-45">Denegar</a>
+                                    <div class="row px-2">
+                                        <div class="col-12 col-md-6 px-1">
+                                            <button id="delete-${usuario.user_id}" class="btn btn-primary btn-sm w-100">Eliminar Usuario</button>
+                                        </div>
+                                        <div class="col-12 col-md-6 px-0">
+                                            <button id="sleep-${usuario.user_id}" class="btn btn-secondary btn-sm w-100">Suspender Usuario</button>
+                                        </div>
+                                    </div>
                                 </td>
                             `;
-                            
+
                             // Agrega la fila a la tabla
-                            tableActiveBody.appendChild(row);
+                            tableActiveBody.appendChild(row); 
+
+                            // Asigna un event listener al botón de "Eliminar"
+                            document.getElementById(`delete-${usuario.user_id}`).addEventListener('click', () => {
+                                userUseCase.deleteUser(usuario.user_id);
+                                runUseCase("getAllUsers");
+                            });
+
+                            // Asigna un event listener al botón de "Suspender"
+                            document.getElementById(`sleep-${usuario.user_id}`).addEventListener('click', () => {
+                                userUseCase.updateUserAuthorization(usuario.user_id, false);
+                                runUseCase("getAllUsers");
+                            });
                         });
 
-                        // Limpia cualquier contenido previo en el cuerpo de la tabla
+                        // Limpia cualquier contenido previo en el cuerpo de la tabla de peticiones
                         tablePetitionBody.innerHTML = '';
                     
-                        // Recorre el arreglo de usuarios activos y genera las filas
-                        readedData.usuarios_inactivos.forEach((usuario, index) => {
-
+                        // Recorre el arreglo de usuarios inactivos y genera las filas
+                        readedData.usuarios_inactivos.forEach((usuario) => { 
+                            let formattedDate = (new Date(usuario.user_created_at)).toLocaleDateString('es-ES', options); 
+                            
                             // Crea una nueva fila
                             const row = document.createElement('tr');
+                        
+                            // Asigna un ID a la fila basada en el user_id
+                            row.id = `row-${usuario.user_id}`;
                             
                             // Define el contenido de la fila
-                            row.innerHTML = ` 
-                                <td class="text-center">${usuario.user_id}</td>
+                            row.innerHTML = `  
                                 <td class="text-left">${usuario.user_fullname}</td>
                                 <td class="text-center">${usuario.user_name}</td>
-                                <td class="text-center">${usuario.user_created_at ? usuario.user_created_at : 'Date Null'}</td>
-                                <td class="text-center">${usuario.user_role_id ? 'Admin' : 'N'}</td>
+                                <td class="text-center">${formattedDate}</td>
+                                <td class="text-center">${usuario.user_role_id ? 'Admin' : 'Regular'}</td>
                                 <td class="text-center">
-                                    <a href="#" class="btn btn-primary btn-sm w-45">Aceptar</a>
-                                    <a href="#" class="btn btn-secondary btn-sm w-45">Denegar</a>
-                                </td>
-                            `;
-                            
+                                    <div class="row">
+                                        <div class="col-12 col-md-6 pr-1">
+                                            <button id="accept-${usuario.user_id}" class="btn btn-primary btn-sm w-100">Aceptar</button>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <button id="deleteAm-${usuario.user_id}" class="btn btn-secondary btn-sm w-100">Denegar</button>
+                                        </div>
+                                    </div>
+                                </td>`;
+                        
                             // Agrega la fila a la tabla
                             tablePetitionBody.appendChild(row);
+                        
+                            // Asigna un event listener al botón de "Aceptar"
+                            document.getElementById(`accept-${usuario.user_id}`).addEventListener('click', () => {
+                                userUseCase.updateUserAuthorization(usuario.user_id, true);
+                                runUseCase("getAllUsers");
+                            });
+                        
+                            // Asigna un event listener al botón de "Denegar"
+                            document.getElementById(`deleteAm-${usuario.user_id}`).addEventListener('click', () => {
+                                userUseCase.deleteUser(usuario.user_id);
+                                runUseCase("getAllUsers");
+                            });
                         });
-                    
                     } else {
                         console.error("No se recibieron datos");
                     }
@@ -165,8 +194,8 @@ function runUseCase( caseEndpoint, content ) {
                 });
             break;
 
-        default :
-            alert("Unsoported ");
+        default:
+            alert("Unsupported action");
             break;
     }
 }

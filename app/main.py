@@ -41,6 +41,8 @@ def obtener_salt_y_password(user_name):
 # Actualizar estado de usuario autorizado
 @eel.expose
 def actualizar_usuario_autorizado(user_id, autorizado):
+    print("PEWEE UPDATE  ${autorizado}");
+
     try:
         user = User_Table.get(User_Table.user_id == user_id)
         user.user_authorized = autorizado
@@ -54,6 +56,7 @@ def actualizar_usuario_autorizado(user_id, autorizado):
 # Eliminar usuario con efecto en cascada
 @eel.expose
 def eliminar_usuario(user_id):
+    print("Eliminar usuario ${user_id}");
     try:
         user = User_Table.get(User_Table.user_id == user_id)
         user.delete_instance()

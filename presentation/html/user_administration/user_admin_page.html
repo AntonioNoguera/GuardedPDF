@@ -27,30 +27,31 @@
             <a href="#" onclick="navigateTo(Routes.FILES_PAGE)" class="nav-link ms-auto" style="margin-right: 20px;">Volver</a>
         </div>
     </nav> 
-        <div class="col-md-12 content my-5" style="height: 80vh;"> 
-            <div class="px-3 py-3 my-auto text-center" >
-                <h3>Solicitudes de Usuarios</h3>
-            </div>  
 
-            <div class="row px-4 mb-3">
-                <div class="col-6"></div>
-                <div class="col-3">
-                    <button id="newPetitionsBtn" class="btn btn-primary w-100" onclick="showTable('table_petitions')">Nuevas Solicitudes</button>
-                </div>
+    <div class="col-md-12 content my-5" style="height: 80vh;"> 
+        
+        <div class="px-3 py-3 my-auto text-center" >
+            <h3>Solicitudes de Usuarios</h3>
+        </div>  
 
-                <div class="col-3">
-                    <button id="activeUserBtn" class="btn btn-secondary w-100" onclick="showTable('table_active')">Usuarios Activos</button>
-                </div>
+        <div class="row px-4 mb-3">
+            <div class="col-6"></div>
+            <div class="col-3">
+                <button id="newPetitionsBtn" class="btn btn-secondary w-100" onclick="showTable('table_petitions')">Nuevas Solicitudes</button>
             </div>
+
+            <div class="col-3">
+                <button id="activeUserBtn" class="btn btn-primary w-100" onclick="showTable('table_active')">Usuarios Activos</button>
+            </div>
+        </div>
 
         <div class="row mx-2">
             <div class="table-responsive" style="height: calc(80vh - 140px); overflow-y: auto;">
                 <table id="table_active" class="table table-striped table-hover mb-0">
                     <thead>
                         <tr>
-                            <th scope="col" class="w-auto">ID</th>
                             <th scope="col" class="col-3">Nombre de Completo</th>
-                            <th scope="col" class="col-3 text-center">Usuario</th>
+                            <th scope="col" class="col-3">Usuario</th>
                             <th scope="col" class="col-2 text-center">Fecha de Petición</th> 
                             <th scope="col" class="col-2 text-center">Nivel de Usuario</th> 
                             <th scope="col" class="col-2 text-center">Acciones</th>
@@ -62,9 +63,8 @@
                 <table id="table_petitions" class="table table-striped table-hover mb-0" style="display: none;">
                     <thead>
                         <tr>
-                            <th scope="col" class="w-auto">ID</th>
                             <th scope="col" class="col-3">Nombre de Completo</th>
-                            <th scope="col" class="col-3 text-center">Usuario</th>
+                            <th scope="col" class="col-3">Usuario</th>
                             <th scope="col" class="col-2 text-center">Fecha de Petición</th> 
                             <th scope="col" class="col-2 text-center">Nivel de Usuario</th> 
                             <th scope="col" class="col-2 text-center">Acciones</th>
@@ -82,12 +82,34 @@
     <script>
         // Función para mostrar una tabla y ocultar la otra
         function showTable(tableId) {
-            // Oculta ambas tablas
-            document.getElementById('table_active').style.display = 'none';
-            document.getElementById('table_petitions').style.display = 'none';
+            // Mostrar la tabla seleccionada
+            if (tableId === 'table_petitions') {
+                document.getElementById('table_petitions').style.display = 'table';
+                document.getElementById('table_active').style.display = 'none';
+            } else {
+                document.getElementById('table_petitions').style.display = 'none';
+                document.getElementById('table_active').style.display = 'table';
+            }
 
-            // Muestra la tabla seleccionada
-            document.getElementById(tableId).style.display = 'block';
+            removeStyles();
+
+            // Cambiar clases de botones
+            if (tableId === 'table_petitions') { 
+                document.getElementById('newPetitionsBtn').classList.add('btn-primary');
+                document.getElementById('activeUserBtn').classList.add('btn-secondary');
+            } else { 
+                document.getElementById('activeUserBtn').classList.add('btn-primary');
+                document.getElementById('newPetitionsBtn').classList.add('btn-secondary');
+            }
+        }
+
+        function removeStyles () {
+            document.getElementById('activeUserBtn').classList.remove('btn-secondary'); 
+            document.getElementById('newPetitionsBtn').classList.remove('btn-secondary'); 
+
+            
+            document.getElementById('activeUserBtn').classList.remove('btn-primary'); 
+            document.getElementById('newPetitionsBtn').classList.remove('btn-primary'); 
         }
 
         // Espera a que el contenido del DOM esté completamente cargado

@@ -63,6 +63,7 @@ export const userUseCase = {
                     "SHA-256",
                     new TextEncoder().encode(enteredPassword + saltHex)
                 );
+
                 const hashArray = Array.from(new Uint8Array(hashBuffer));
                 const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     
@@ -101,35 +102,51 @@ export const userUseCase = {
     },
 
     // Actualizar estado autorizado de usuario
-    updateUserAuthorization: function(userId, isAuthorized) {
-        eel.actualizar_usuario_autorizado(userId, isAuthorized).then(result => {
-            alert(result.message);
-        });
+    updateUserAuthorization: (user_id, is_authorized) => {
+        return eel.actualizar_usuario_autorizado(user_id, is_authorized)()
+            .then((result) => {
+
+                console.log(result);
+                if (result === true) {
+                    console.log("Autorización actualizada correctamente.");
+                } else {
+                    console.error("Error al actualizar la autorización:", result);
+                }
+                return result;
+            })
+            .catch((error) => {
+                console.error("Error al llamar a la función Python:", error);
+            });
     },
 
     // Eliminar usuario
     deleteUser: function(userId) {
-        eel.eliminar_usuario(userId).then(result => {
-            alert(result.message);
-        });
-    },    
-
+        eel.eliminar_usuario(userId)()
+            .then(result => {
+                return result;
+            })
+            .catch(error => {
+                console.error("Error al eliminar el usuario:", error);
+            });
+    },
+    
     getActiveAndInactiveUsers: async function() {
         try {
             // Llamada correcta a la función expuesta de Eel (nota los paréntesis vacíos)
             const result = await eel.obtener_usuarios_activos_e_inactivos()();
             
-            if (result.success) { 
+            if (result.success) {
+
                 return result;
+
             } else {
+
                 alert(result.message);
+
             }
         } catch (error) {
             console.error("Error al obtener usuarios activos e inactivos:", error);
             alert("Ocurrió un error al obtener usuarios.");
         }
-    }
-    
-
-    
+    }    
 };
