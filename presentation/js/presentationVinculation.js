@@ -118,7 +118,7 @@ async function runUseCase(caseEndpoint, content) {  // Añadir async aquí
                                         <button id="delete-${usuario.user_id}" class="btn btn-primary btn-sm w-100">Eliminar Usuario</button>
                                     </div>
                                     <div class="col-12 col-md-6 px-0">
-                                        <button id="sleep-${usuario.user_id}" class="btn btn-secondary btn-sm w-100">Suspender Usuario</button>
+                                        <button id="sleep-${usuario.user_id}" class="btn btn-secondary btn-sm w-90">Suspender Usuario</button>
                                     </div>
                                 </div>
                             </td>
@@ -161,11 +161,12 @@ async function runUseCase(caseEndpoint, content) {  // Añadir async aquí
                             <td class="text-center">${usuario.user_role_id ? 'Admin' : 'Regular'}</td>
                             <td class="text-center">
                                 <div class="row">
-                                    <div class="col-12 col-md-6 pr-1">
+                                    <div class="col-12 col-md-6 px-0">
                                         <button id="accept-${usuario.user_id}" class="btn btn-primary btn-sm w-100">Aceptar</button>
-                                    </div>
-                                    <div class="col-12 col-md-6">
-                                        <button id="deleteAm-${usuario.user_id}" class="btn btn-secondary btn-sm w-100">Denegar</button>
+                                    </div> 
+                                    
+                                    <div class="col-12 col-md-6 px-0">
+                                        <button id="deleteAm-${usuario.user_id}" class="btn btn-secondary btn-sm w-90">Denegar</button>
                                     </div>
                                 </div>
                             </td>`;
