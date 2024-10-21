@@ -193,6 +193,13 @@ async function runUseCase(caseEndpoint, content) {  // Añadir async aquí
             }
             break;
 
+        case "getUserFiles" :
+            //Readed from memory
+            const UserId = 3;
+            const getFiles = await fileUseCase.getFilesByUser(UserId);
+            console.log(getFiles);
+            break;
+
         default:
             alert("Unsupported action");
             break;

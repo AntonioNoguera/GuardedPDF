@@ -69,6 +69,20 @@ class File_Table(BaseModel):
     file_created_by = ForeignKeyField(User_Table, backref='files', on_delete='CASCADE')
     file_visible_for_all = BooleanField(default=False)
     file_is_merge = BooleanField(default=False)
+    file_data = BlobField()
+
+    # Método para convertir a un diccionario con fechas en formato ISO
+    def to_dict(self):
+        return {
+            'file_id': self.file_id,
+            'file_title': self.file_title,
+            'file_description': self.file_description,
+            'file_created_at': self.file_created_at.isoformat() if self.file_created_at else None,
+            'file_created_by': self.file_created_by.user_name,  # Solo devolver el ID del usuario
+            'file_visible_for_all': self.file_visible_for_all,
+            'file_is_merge': self.file_is_merge
+        }
+
 
 class Merge_Member_Table(BaseModel):
     merge_member_id = AutoField()

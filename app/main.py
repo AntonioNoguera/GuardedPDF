@@ -40,8 +40,7 @@ def obtener_salt_y_password(user_name):
 
 # Actualizar estado de usuario autorizado
 @eel.expose
-def actualizar_usuario_autorizado(user_id, autorizado):
-    print("PEWEE UPDATE  ${autorizado}");
+def actualizar_usuario_autorizado(user_id, autorizado): 
 
     try:
         user = User_Table.get(User_Table.user_id == user_id)
@@ -103,14 +102,22 @@ def seleccionar_todos_archivos():
         return {"success": True, "files": list(File_Table.select().dicts())}
     except Exception as e:
         return {"success": False, "message": f"Error al seleccionar archivos: {e}"}
-
-# Seleccionar archivos por ID de usuario dado
+ 
 @eel.expose
 def seleccionar_archivos_por_usuario(user_id):
     try:
-        return {"success": True, "files": list(File_Table.select().where(File_Table.file_created_by == user_id).dicts())}
+        # Usar una condición OR para seleccionar archivos creados por el usuario o visibles para todos
+        files = File_Table.select().where(
+            (File_Table.file_created_by == user_id) | (File_Table.file_visible_for_all == True)
+        )
+
+        # Convertir cada archivo a diccionario usando el método `to_dict()`
+        files_as_dict = [file.to_dict() for file in files]
+
+        return {"success": True, "files": list(files_as_dict)}
     except Exception as e:
         return {"success": False, "message": f"Error al seleccionar archivos por usuario: {e}"}
+
 
 # Eliminar archivo con efecto en cascada
 @eel.expose
