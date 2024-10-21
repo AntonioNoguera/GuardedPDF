@@ -78,10 +78,10 @@ export const userUseCase = {
                     alert("Incorrect password");
                     return false;  // Retorna false si la contraseña es incorrecta
                 }
-            } else {
-                alert(result.message);
-                return false;  // Retorna false si hay algún problema con el usuario
             }
+            alert(result.message);
+            return false;
+
         } catch (error) {
             console.error("Error en la verificación:", error);
             alert("Ocurrió un error durante la verificación del usuario.");

@@ -65,133 +65,132 @@ function navigateTo (data, content) {
 }
 
 // UseCaseAplications
-function runUseCase(caseEndpoint, content) { 
+async function runUseCase(caseEndpoint, content) {  // Añadir async aquí
     
     switch (caseEndpoint) {
         case "addNewUser":
             if (registerValidation(content)) {
-                userUseCase.createUser(content);
+                await userUseCase.createUser(content);  // Añadir await aquí
             }
             break;
         
         case "tryLogin": 
             if (loginValidations(content)) {
-                if (userUseCase.verifyUserPassword(content)) {
+                const isPasswordValid = await userUseCase.verifyUserPassword(content);  // Añadir await aquí
+                if (isPasswordValid) {
                     freeNavigateTo(Routes.FILES_PAGE);
                 }
             }
             break;
 
         case "getAllUsers": 
-
-            userUseCase.getActiveAndInactiveUsers()
-                .then((readedData) => {
-                    if (readedData) {
-                        console.log(readedData);
+            try {
+                const readedData = await userUseCase.getActiveAndInactiveUsers();  // Añadir await aquí
+                if (readedData) {
+                    console.log(readedData);
                     
-                        // Actualiza el texto de los botones con los contadores
-                        document.getElementById('activeUserBtn').innerHTML = "Usuarios Activos ( " + readedData.usuarios_activos.length + " )";
-                        document.getElementById('newPetitionsBtn').innerHTML = "Nuevas Peticiones ( " + readedData.usuarios_inactivos.length + " )";
+                    // Actualiza el texto de los botones con los contadores
+                    document.getElementById('activeUserBtn').innerHTML = "Usuarios Activos ( " + readedData.usuarios_activos.length + " )";
+                    document.getElementById('newPetitionsBtn').innerHTML = "Nuevas Peticiones ( " + readedData.usuarios_inactivos.length + " )";
                     
-                        // Selecciona el cuerpo de la tabla de usuarios activos
-                        const tableActiveBody = document.querySelector('#table_active tbody');
-                        const tablePetitionBody = document.querySelector('#table_petitions tbody');
+                    // Selecciona el cuerpo de la tabla de usuarios activos
+                    const tableActiveBody = document.querySelector('#table_active tbody');
+                    const tablePetitionBody = document.querySelector('#table_petitions tbody');
+                    
+                    // Limpia cualquier contenido previo en el cuerpo de la tabla
+                    tableActiveBody.innerHTML = '';
+                    
+                    // Recorre el arreglo de usuarios activos y genera las filas
+                    readedData.usuarios_activos.forEach((usuario) => {
+                        // Crea una nueva fila
+                        let row = document.createElement('tr');
+                        let formattedDate = (new Date(usuario.user_created_at)).toLocaleDateString('es-ES', options); 
                         
-                        // Limpia cualquier contenido previo en el cuerpo de la tabla
-                        tableActiveBody.innerHTML = '';
-                    
-                        // Recorre el arreglo de usuarios activos y genera las filas
-                        readedData.usuarios_activos.forEach((usuario) => {
-                            // Crea una nueva fila
-                            let row = document.createElement('tr');
-                            let formattedDate = (new Date(usuario.user_created_at)).toLocaleDateString('es-ES', options); 
-                            
-                            // Define el contenido de la fila
-                            row.innerHTML = `  
-                                <td class="text-left">${usuario.user_fullname}</td>
-                                <td class="text-left">${usuario.user_name}</td>
-                                <td class="text-center">${formattedDate}</td>
-                                <td class="text-center">${usuario.user_role_id ? 'Administrador' : 'Usuario Estándar'}</td>
-                                <td class="text-center">
-                                    <div class="row px-2">
-                                        <div class="col-12 col-md-6 px-1">
-                                            <button id="delete-${usuario.user_id}" class="btn btn-primary btn-sm w-100">Eliminar Usuario</button>
-                                        </div>
-                                        <div class="col-12 col-md-6 px-0">
-                                            <button id="sleep-${usuario.user_id}" class="btn btn-secondary btn-sm w-100">Suspender Usuario</button>
-                                        </div>
+                        // Define el contenido de la fila
+                        row.innerHTML = `  
+                            <td class="text-left">${usuario.user_fullname}</td>
+                            <td class="text-left">${usuario.user_name}</td>
+                            <td class="text-center">${formattedDate}</td>
+                            <td class="text-center">${usuario.user_role_id ? 'Administrador' : 'Usuario Estándar'}</td>
+                            <td class="text-center">
+                                <div class="row px-2">
+                                    <div class="col-12 col-md-6 px-1">
+                                        <button id="delete-${usuario.user_id}" class="btn btn-primary btn-sm w-100">Eliminar Usuario</button>
                                     </div>
-                                </td>
-                            `;
+                                    <div class="col-12 col-md-6 px-0">
+                                        <button id="sleep-${usuario.user_id}" class="btn btn-secondary btn-sm w-100">Suspender Usuario</button>
+                                    </div>
+                                </div>
+                            </td>
+                        `;
 
-                            // Agrega la fila a la tabla
-                            tableActiveBody.appendChild(row); 
+                        // Agrega la fila a la tabla
+                        tableActiveBody.appendChild(row); 
 
-                            // Asigna un event listener al botón de "Eliminar"
-                            document.getElementById(`delete-${usuario.user_id}`).addEventListener('click', () => {
-                                userUseCase.deleteUser(usuario.user_id);
-                                runUseCase("getAllUsers");
-                            });
-
-                            // Asigna un event listener al botón de "Suspender"
-                            document.getElementById(`sleep-${usuario.user_id}`).addEventListener('click', () => {
-                                userUseCase.updateUserAuthorization(usuario.user_id, false);
-                                runUseCase("getAllUsers");
-                            });
+                        // Asigna un event listener al botón de "Eliminar"
+                        document.getElementById(`delete-${usuario.user_id}`).addEventListener('click', async () => {  // Añadir async aquí
+                            await userUseCase.deleteUser(usuario.user_id);  // Añadir await aquí
+                            await runUseCase("getAllUsers");  // Añadir await aquí
                         });
 
-                        // Limpia cualquier contenido previo en el cuerpo de la tabla de peticiones
-                        tablePetitionBody.innerHTML = '';
-                    
-                        // Recorre el arreglo de usuarios inactivos y genera las filas
-                        readedData.usuarios_inactivos.forEach((usuario) => { 
-                            let formattedDate = (new Date(usuario.user_created_at)).toLocaleDateString('es-ES', options); 
-                            
-                            // Crea una nueva fila
-                            const row = document.createElement('tr');
-                        
-                            // Asigna un ID a la fila basada en el user_id
-                            row.id = `row-${usuario.user_id}`;
-                            
-                            // Define el contenido de la fila
-                            row.innerHTML = `  
-                                <td class="text-left">${usuario.user_fullname}</td>
-                                <td class="text-center">${usuario.user_name}</td>
-                                <td class="text-center">${formattedDate}</td>
-                                <td class="text-center">${usuario.user_role_id ? 'Admin' : 'Regular'}</td>
-                                <td class="text-center">
-                                    <div class="row">
-                                        <div class="col-12 col-md-6 pr-1">
-                                            <button id="accept-${usuario.user_id}" class="btn btn-primary btn-sm w-100">Aceptar</button>
-                                        </div>
-                                        <div class="col-12 col-md-6">
-                                            <button id="deleteAm-${usuario.user_id}" class="btn btn-secondary btn-sm w-100">Denegar</button>
-                                        </div>
-                                    </div>
-                                </td>`;
-                        
-                            // Agrega la fila a la tabla
-                            tablePetitionBody.appendChild(row);
-                        
-                            // Asigna un event listener al botón de "Aceptar"
-                            document.getElementById(`accept-${usuario.user_id}`).addEventListener('click', () => {
-                                userUseCase.updateUserAuthorization(usuario.user_id, true);
-                                runUseCase("getAllUsers");
-                            });
-                        
-                            // Asigna un event listener al botón de "Denegar"
-                            document.getElementById(`deleteAm-${usuario.user_id}`).addEventListener('click', () => {
-                                userUseCase.deleteUser(usuario.user_id);
-                                runUseCase("getAllUsers");
-                            });
+                        // Asigna un event listener al botón de "Suspender"
+                        document.getElementById(`sleep-${usuario.user_id}`).addEventListener('click', async () => {  // Añadir async aquí
+                            await userUseCase.updateUserAuthorization(usuario.user_id, false);  // Añadir await aquí
+                            await runUseCase("getAllUsers");  // Añadir await aquí
                         });
-                    } else {
-                        console.error("No se recibieron datos");
-                    }
-                })
-                .catch((error) => {
-                    console.error("Error al obtener los usuarios activos e inactivos:", error);
-                });
+                    });
+
+                    // Limpia cualquier contenido previo en el cuerpo de la tabla de peticiones
+                    tablePetitionBody.innerHTML = '';
+                    
+                    // Recorre el arreglo de usuarios inactivos y genera las filas
+                    readedData.usuarios_inactivos.forEach((usuario) => { 
+                        let formattedDate = (new Date(usuario.user_created_at)).toLocaleDateString('es-ES', options); 
+                        
+                        // Crea una nueva fila
+                        const row = document.createElement('tr');
+                    
+                        // Asigna un ID a la fila basada en el user_id
+                        row.id = `row-${usuario.user_id}`;
+                        
+                        // Define el contenido de la fila
+                        row.innerHTML = `  
+                            <td class="text-left">${usuario.user_fullname}</td>
+                            <td class="text-center">${usuario.user_name}</td>
+                            <td class="text-center">${formattedDate}</td>
+                            <td class="text-center">${usuario.user_role_id ? 'Admin' : 'Regular'}</td>
+                            <td class="text-center">
+                                <div class="row">
+                                    <div class="col-12 col-md-6 pr-1">
+                                        <button id="accept-${usuario.user_id}" class="btn btn-primary btn-sm w-100">Aceptar</button>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <button id="deleteAm-${usuario.user_id}" class="btn btn-secondary btn-sm w-100">Denegar</button>
+                                    </div>
+                                </div>
+                            </td>`;
+                    
+                        // Agrega la fila a la tabla
+                        tablePetitionBody.appendChild(row);
+                    
+                        // Asigna un event listener al botón de "Aceptar"
+                        document.getElementById(`accept-${usuario.user_id}`).addEventListener('click', async () => {  // Añadir async aquí
+                            await userUseCase.updateUserAuthorization(usuario.user_id, true);  // Añadir await aquí
+                            await runUseCase("getAllUsers");  // Añadir await aquí
+                        });
+                    
+                        // Asigna un event listener al botón de "Denegar"
+                        document.getElementById(`deleteAm-${usuario.user_id}`).addEventListener('click', async () => {  // Añadir async aquí
+                            await userUseCase.deleteUser(usuario.user_id);  // Añadir await aquí
+                            await runUseCase("getAllUsers");  // Añadir await aquí
+                        });
+                    });
+                } else {
+                    console.error("No se recibieron datos");
+                }
+            } catch (error) {
+                console.error("Error al obtener los usuarios activos e inactivos:", error);
+            }
             break;
 
         default:
@@ -199,6 +198,7 @@ function runUseCase(caseEndpoint, content) {
             break;
     }
 }
+
 
 const App = {
     navigateTo,
