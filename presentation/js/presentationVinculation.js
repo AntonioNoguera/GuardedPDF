@@ -111,7 +111,7 @@ async function runUseCase(caseEndpoint, content) {  // Añadir async aquí
                             <td class="text-left">${usuario.user_fullname}</td>
                             <td class="text-left">${usuario.user_name}</td>
                             <td class="text-center">${formattedDate}</td>
-                            <td class="text-center">${usuario.user_role_id ? 'Administrador' : 'Usuario Estándar'}</td>
+                            <td class="text-center">${usuario.user_role_id}</td>
                             <td class="text-center">
                                 <div class="row px-2">
                                     <div class="col-12 col-md-6 px-1">
@@ -158,7 +158,7 @@ async function runUseCase(caseEndpoint, content) {  // Añadir async aquí
                             <td class="text-left">${usuario.user_fullname}</td>
                             <td class="text-center">${usuario.user_name}</td>
                             <td class="text-center">${formattedDate}</td>
-                            <td class="text-center">${usuario.user_role_id ? 'Admin' : 'Regular'}</td>
+                            <td class="text-center">${usuario.user_role_id}</td>
                             <td class="text-center">
                                 <div class="row">
                                     <div class="col-12 col-md-6 px-0">
@@ -198,8 +198,15 @@ async function runUseCase(caseEndpoint, content) {  // Añadir async aquí
             //Readed from memory
             const UserId = 3;
             const getFiles = await fileUseCase.getFilesByUser(UserId);
-            console.log(getFiles);
             break;
+        
+        case "getAllFiles":
+            const files = await fileUseCase.getAllFiles();
+
+            console.log(files);
+
+            break;
+            
 
         default:
             alert("Unsupported action");

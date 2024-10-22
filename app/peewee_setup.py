@@ -1,4 +1,6 @@
 import pymysql
+import base64
+
 from peewee import *
 import datetime
 
@@ -54,10 +56,19 @@ class User_Table(BaseModel):
             'user_fullname': self.user_fullname,
             'user_password': self.user_password,
             'user_password_salt': self.user_password_salt,
-            'user_role_id': self.user_role_id.id,  # Serializa solo el ID del rol
+            'user_role_id': self.user_role_id.role_name,  # Serializa solo el ID del rol
             'user_created_at': self.user_created_at.isoformat() if self.user_created_at else None,
             'user_authorized': self.user_authorized,
             'user_last_login': self.user_last_login.isoformat() if self.user_last_login else None,
+        }
+    
+    # Método para convertir a un diccionario con fechas en formato ISO
+    def to_self_dict(self):
+        return {
+            'user_id': self.user_id,
+            'user_name': self.user_name,
+            'user_fullname': self.user_fullname,  
+            'user_role_id': self.user_role_id.role_name,  # Serializa solo el ID del rol 
         }
     
 
@@ -71,19 +82,22 @@ class File_Table(BaseModel):
     file_is_merge = BooleanField(default=False)
     file_data = BlobField()
 
-    # Método para convertir a un diccionario con fechas en formato ISO
+    # Método para convertir a un diccionario con fechas en formato ISO y archivo en base64
     def to_dict(self):
+        # Codifica el archivo BLOB en base64 si está disponible
+        file_data_base64 = base64.b64encode(self.file_data).decode('utf-8') if self.file_data else None
+
         return {
             'file_id': self.file_id,
             'file_title': self.file_title,
             'file_description': self.file_description,
             'file_created_at': self.file_created_at.isoformat() if self.file_created_at else None,
-            'file_created_by': self.file_created_by.user_name,  # Solo devolver el ID del usuario
+            'file_created_by': self.file_created_by.id,  # Devolver el ID del usuario en lugar de user_name
             'file_visible_for_all': self.file_visible_for_all,
-            'file_is_merge': self.file_is_merge
+            'file_is_merge': self.file_is_merge,
+            'file_blob': file_data_base64,  # Devolver el archivo codificado en base64
         }
-
-
+    
 class Merge_Member_Table(BaseModel):
     merge_member_id = AutoField()
     file_id = ForeignKeyField(File_Table, backref='merge_members', on_delete='CASCADE')

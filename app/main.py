@@ -64,6 +64,14 @@ def eliminar_usuario(user_id):
         return {"success": False, "message": "Usuario no encontrado."}
     except Exception as e:
         return {"success": False, "message": f"Error al eliminar usuario: {e}"}
+    
+@eel.expose
+def obtener_id_y_nivel_de_usuario(user_name): 
+    try:
+        user = User_Table.get(User_Table.user_name == user_name)
+        return {"success": True, "user": user.to_self_dict()}
+    except DoesNotExist:
+        return {"success": False, "message": "Usuario no encontrado."}
 
 # Actualizar fecha de login
 @eel.expose
@@ -99,7 +107,9 @@ def obtener_usuarios_activos_e_inactivos():
 @eel.expose
 def seleccionar_todos_archivos():
     try:
-        return {"success": True, "files": list(File_Table.select().dicts())}
+        
+        usuarios_activos = [fileEnt.to_dict() for fileEnt in File_Table.select()]
+        return { "success": True, "files": usuarios_activos }
     except Exception as e:
         return {"success": False, "message": f"Error al seleccionar archivos: {e}"}
  

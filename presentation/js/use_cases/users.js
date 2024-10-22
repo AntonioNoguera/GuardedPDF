@@ -7,6 +7,26 @@ export const userUseCase = {
         eel.testConection();
     },
 
+    //Obtener ID y Nivel
+    getUserInfo : async function(userName) {
+        alert("Tried to get user Info");
+        try {
+            const result = await eel.obtener_id_y_nivel_de_usuario(userName)();
+
+            if (result.success) {
+                
+                console.log(result);
+                localStorage.setItem('userPublicInfo', JSON.stringify(result.user)); 
+            } else {
+                console.log("Error on data read")
+            }
+            return result;
+        } catch (error){
+            console.log(error)
+        }
+
+    },
+
     // Crear nuevo usuario
     createUser: async function(userData) {
         console.log(userData);
@@ -42,16 +62,16 @@ export const userUseCase = {
  
     verifyUserPassword: async function(content) {
         try {
-            const userId = content.usuario;
+            const userName = content.usuario;
             const enteredPassword = content.password;
     
-            if (!userId || !enteredPassword) {
+            if (!userName || !enteredPassword) {
                 alert("Por favor ingrese usuario y contraseña.");
                 return false; // Retorna false si faltan datos
             }
     
             // Llamada a Eel para obtener el salt y la contraseña hasheada
-            const result = await eel.obtener_salt_y_password(userId)();
+            const result = await eel.obtener_salt_y_password(userName)();
             console.log(result);
     
             if (result.success) {
@@ -69,9 +89,13 @@ export const userUseCase = {
     
                 if (hashHex === storedHash) {
                     alert("Password is correct");
+
+                    //Setear info del usuario, nivel y nombre namas
     
                     // Actualizar la fecha de login del usuario
-                    await this.updateLoginDate(userId);
+                    await this.updateLoginDate(userName);
+
+                    await this.getUserInfo(userName);
     
                     return true;  // Retorna true si todo es correcto
                 } else {
