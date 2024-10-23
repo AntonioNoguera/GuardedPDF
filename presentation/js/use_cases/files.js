@@ -201,5 +201,37 @@ export const fileUseCase = {
             console.log("Resultado de la eliminación:", result);
             alert(result.message);
         });
+    },
+
+    mergeFiles : function (merginFiles){
+        //funcion que une todos los archivos en uno
+
+        try {
+            //donde mergeResult es igual a la union de los archivos
+            const mergeResult= "";
+
+            for (file in merginFiles) {
+                // Insertar en la base 
+                try{
+                    eel.insertar_archivo(file)
+                } catch (error){
+                    console.log("Fue imposible en ")
+                    break;
+                }
+
+                
+            }
+            
+
+        } catch (error) {
+            console.log("Something went wrong with the merge")
+        }
+
+
+    },
+
+
+    insertMergeMembers : function() {
+
     }
 };

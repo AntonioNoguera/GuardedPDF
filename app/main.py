@@ -143,18 +143,27 @@ def eliminar_archivo(file_id):
 
 # Insertar nuevo archivo
 @eel.expose
-def insertar_archivo(titulo, descripcion, creado_por, visible_para_todos=False, es_union=False):
+def insertar_archivo(file_title, file_description, file_created_by_id, file_visible_for_all=False, file_is_merge=False, file_data=None):
     try:
-        File_Table.create(
-            file_title=titulo,
-            file_description=descripcion,
-            file_created_by=creado_por,
-            file_visible_for_all=visible_para_todos,
-            file_is_merge=es_union
+        # Insertar el archivo en la tabla
+        new_file = File_Table.create(
+            file_title=file_title,
+            file_description=file_description,
+            file_created_at=datetime.datetime.now(),  # Si necesitas la fecha actual
+            file_created_by=file_created_by_id,  # Suponiendo que ya tienes el ID del usuario
+            file_visible_for_all=file_visible_for_all,
+            file_is_merge=file_is_merge,
+            file_data=file_data
         )
-        return {"success": True, "message": "Archivo creado correctamente."}
-    except Exception as e:
-        return {"success": False, "message": f"Error al insertar archivo: {e}"}
+        return {
+            "status": "success",
+            "message": f"File '{file_title}' inserted successfully"
+        }
+    except IntegrityError as e:
+        return {
+            "status": "error",
+            "message": f"Error inserting file: {str(e)}"
+        }
 
 # Insertar nuevo miembro de unión
 @eel.expose
