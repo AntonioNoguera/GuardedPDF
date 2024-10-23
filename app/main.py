@@ -1,4 +1,7 @@
 import eel
+import base64
+import io
+from pypdf import PdfWriter, PdfReader
 from peewee_setup import *
 import datetime
 from peewee import IntegrityError, DoesNotExist
@@ -143,28 +146,34 @@ def eliminar_archivo(file_id):
 
 # Insertar nuevo archivo
 @eel.expose
-def insertar_archivo(file_title, file_description, file_created_by_id, file_visible_for_all=False, file_is_merge=False, file_data=None):
+def insertar_archivo(file_name, descripcion, user_id, is_visible, is_merge, file_data):
     try:
-        # Insertar el archivo en la tabla
+        # Intentar insertar el archivo
         new_file = File_Table.create(
-            file_title=file_title,
-            file_description=file_description,
-            file_created_at=datetime.datetime.now(),  # Si necesitas la fecha actual
-            file_created_by=file_created_by_id,  # Suponiendo que ya tienes el ID del usuario
-            file_visible_for_all=file_visible_for_all,
-            file_is_merge=file_is_merge,
+            file_title=file_name,
+            file_description=descripcion,
+            file_created_by=user_id,
+            file_visible_for_all=is_visible,
+            file_is_merge=is_merge,
+            file_data=base64.b64decode(file_data)
+        )
+        return {"status": "success", "file_id": new_file.file_id}
+    
+    except OperationalError as e:
+        print(f"Error de conexión: {e}, reintentando...")
+        # Intentar reconectar
+        db.connect(reuse_if_open=True)
+        # Reintentar la operación
+        new_file = File_Table.create(
+            file_title=file_name,
+            file_description=descripcion,
+            file_created_by=user_id,
+            file_visible_for_all=is_visible,
+            file_is_merge=is_merge,
             file_data=file_data
         )
-        return {
-            "status": "success",
-            "message": f"File '{file_title}' inserted successfully"
-        }
-    except IntegrityError as e:
-        return {
-            "status": "error",
-            "message": f"Error inserting file: {str(e)}"
-        }
-
+        return {"status": "success", "file_id": new_file.file_id}
+    
 # Insertar nuevo miembro de unión
 @eel.expose
 def insertar_miembro_union(file_id, merge_result_id):
@@ -204,6 +213,34 @@ def obtener_todos_los_merges():
         return {"success": True, "merges": list(Merge_Member_Table.select().dicts())}
     except Exception as e:
         return {"success": False, "message": f"Error al obtener merges: {e}"}
+    
+@eel.expose
+def merge_pdfs(base64_pdfs):
+    # Crear una instancia de PdfWriter
+    writer = PdfWriter()
+    
+    # Iterar sobre cada archivo PDF codificado en base64
+    for pdf in base64_pdfs:
+        # Decodificar cada archivo base64 a binario
+        pdf_bytes = base64.b64decode(pdf)
+        pdf_stream = io.BytesIO(pdf_bytes)
+        
+        # Leer el PDF decodificado
+        reader = PdfReader(pdf_stream)
+        
+        # Agregar todas las páginas del PDF al PdfWriter
+        for page in reader.pages:
+            writer.add_page(page)
+    
+    # Guardar el PDF fusionado en memoria
+    merged_pdf_stream = io.BytesIO()
+    writer.write(merged_pdf_stream)
+
+    # Obtener los bytes del PDF fusionado y codificar a base64
+    merged_pdf_base64 = base64.b64encode(merged_pdf_stream.getvalue()).decode('utf-8')
+    
+    # Retornar el archivo PDF fusionado en base64
+    return merged_pdf_base64
 
 # Test de conexión
 @eel.expose

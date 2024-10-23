@@ -80,8 +80,8 @@ class File_Table(BaseModel):
     file_created_by = ForeignKeyField(User_Table, backref='files', on_delete='CASCADE')
     file_visible_for_all = BooleanField(default=False)
     file_is_merge = BooleanField(default=False)
-    file_data = BlobField()
-
+    file_data = BlobField(constraints=[SQL('LONGBLOB')])
+    
     # Método para convertir a un diccionario con fechas en formato ISO y archivo en base64
     def to_dict(self):
         # Codifica el archivo BLOB en base64 si está disponible

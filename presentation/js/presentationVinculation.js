@@ -160,13 +160,13 @@ async function runUseCase(caseEndpoint, content) {  // Añadir async aquí
                             <td class="text-center">${formattedDate}</td>
                             <td class="text-center">${usuario.user_role_id}</td>
                             <td class="text-center">
-                                <div class="row">
+                                <div class="row px-2">
                                     <div class="col-12 col-md-6 px-0">
                                         <button id="accept-${usuario.user_id}" class="btn btn-primary btn-sm w-100">Aceptar</button>
                                     </div> 
                                     
-                                    <div class="col-12 col-md-6 px-0">
-                                        <button id="deleteAm-${usuario.user_id}" class="btn btn-secondary btn-sm w-90">Denegar</button>
+                                    <div class="col-12 col-md-6 px-1">
+                                        <button id="deleteAm-${usuario.user_id}" class="btn btn-secondary btn-sm w-100">Denegar</button>
                                     </div>
                                 </div>
                             </td>`;
@@ -205,6 +205,12 @@ async function runUseCase(caseEndpoint, content) {  // Añadir async aquí
 
             console.log(files);
 
+            break;
+
+        case "insertFiles":
+        
+            const result = await fileUseCase.mergeOperation(content);
+ 
             break;
             
 

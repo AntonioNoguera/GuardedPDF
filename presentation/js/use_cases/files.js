@@ -131,7 +131,7 @@ export const fileUseCase = {
                 files.forEach(file => {
                     console.log("Generando tarjeta para archivo:", file.file_title);
                     const colDiv = document.createElement('div');
-                    colDiv.classList.add('col-md-4', 'd-flex');
+                    colDiv.classList.add('col-md-4', 'd-flex', 'small-card' );
 
                     const cardDiv = document.createElement('div');
                     cardDiv.classList.add('card', 'mb-3', 'w-100');
@@ -203,33 +203,53 @@ export const fileUseCase = {
         });
     },
 
-    mergeFiles : function (merginFiles){
-        //funcion que une todos los archivos en uno
-
+    mergeOperation: async function (merginFiles) {
+        console.log("Merge Routine");
+        console.log(merginFiles);
+    
+        console.log(merginFiles.length);
+    
         try {
-            //donde mergeResult es igual a la union de los archivos
-            const mergeResult= "";
-
-            for (file in merginFiles) {
-                // Insertar en la base 
-                try{
-                    eel.insertar_archivo(file)
-                } catch (error){
-                    console.log("Fue imposible en ")
-                    break;
+            // Inicializar una variable para representar el resultado de la unión (puede ser una cadena o un buffer dependiendo de los datos)
+            var mergeResult = []; 
+    
+            // Iterar sobre cada archivo en merginFiles
+            for (let file of merginFiles) {
+                try {
+                    console.log("Trying to insert", file.data);
+    
+                    // Aquí puedes procesar cada archivo y "unir" su contenido como parte del mergeResult
+                    mergeResult.push( file.data );  // Ejemplo simple de procesamiento (concatena nombres)
+    
+                    // Insertar en la base de datos con eel (sin callback)
+                    let response = await eel.insertar_archivo(file.name, "descripcion", 1, false, false, file.data)();
+                    if (response.status === "success") {
+                        console.log("Archivo insertado correctamente:", file.name);
+                    } else {
+                        console.log("Error al insertar archivo:", file.name);
+                    }
+    
+                } catch (error) {
+                    console.log("Error al insertar archivo:", file.name, "Error:", error);
+                    // No detener el ciclo, solo registrar el error y continuar
+                    continue;
                 }
-
-                
             }
-            
+    
+            // Lógica para manejar el resultado final de la unión de archivos (mergeResult)
+            console.log("Merge completado:", mergeResult);
+    
+            console.log("Registrando merge...");
+    
+            // Insertar la operación de "UNION" en la base de datos
+            const merge64 = await eel.merge_pdfs(mergeResult)();
 
+            await eel.insertar_archivo("UNION", "descripcion", 1, false, false, merge64)();
+    
         } catch (error) {
-            console.log("Something went wrong with the merge")
+            console.log("Something went wrong with the merge:", error);
         }
-
-
     },
-
 
     insertMergeMembers : function() {
 
