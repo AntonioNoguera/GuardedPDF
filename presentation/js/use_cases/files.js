@@ -65,6 +65,7 @@ export const fileUseCase = {
                 // Iterar sobre cada archivo y crear una fila
                 files.forEach(file => {
                     console.log("Procesando archivo:", file.file_title);
+
                     const row = document.createElement('tr');
             
                     let formattedDate = file.file_created_at ? (new Date(file.file_created_at)).toLocaleDateString('es-ES', options) : "No disponible"; 
@@ -117,39 +118,27 @@ export const fileUseCase = {
     },
 
     getFilesByUser: async function() {
+
         try {
             const user = JSON.parse(localStorage.getItem('userPublicInfo')) || {};
 
             const result = await eel.seleccionar_archivos_por_usuario(user.user_id)();
 
             if (result.success && result.files) {
+
                 console.log("Archivos del usuario obtenidos:", result.files);
                 const files = result.files;
                 const container = document.getElementById('fileContainer');
                 container.innerHTML = '';
 
-                // Recorrer la lista de archivos
                 files.forEach(file => {
                     console.log("Generando tarjeta para archivo:", file.file_title);
+
+                    // Crear la columna (colDiv) directamente con un 'div' contenedor
                     const colDiv = document.createElement('div');
-                    colDiv.classList.add('col-md-4', 'd-flex', 'small-card' );
+                    colDiv.classList.add('col-md-4', 'd-flex', 'small-card', 'my-2');
 
-                    const cardDiv = document.createElement('div');
-                    cardDiv.classList.add('card', 'mb-3', 'w-100');
-
-                    const cardBodyDiv = document.createElement('div');
-                    cardBodyDiv.classList.add('card-body', 'd-flex', 'flex-column');
-
-                    const title = document.createElement('h5');
-                    title.classList.add('card-title');
-                    title.textContent = file.file_title || 'Sin título';
-
-                    const fileSize = document.createElement('p');
-                    fileSize.classList.add('card-text');
-                    fileSize.textContent = `Tamaño: Desconocido`;
-
-                    const uploadDate = document.createElement('p');
-                    uploadDate.classList.add('card-text');
+                    // Formatear la fecha de subida
                     const fechaSubida = file.file_created_at ? 
                         new Date(file.file_created_at).toLocaleDateString('es-ES', { 
                             day: '2-digit', 
@@ -163,22 +152,47 @@ export const fileUseCase = {
                         }) 
                         : 'Fecha desconocida';
                     
-                    uploadDate.textContent = `Subido: ${fechaSubida}`;
+                    const size_formatted = (file.file_size / 8000) + "KB";
 
-                    const downloadButton = document.createElement('a');
-                    downloadButton.href = `#`;
-                    downloadButton.classList.add('btn', 'btn-primary', 'mt-auto');
-                    downloadButton.textContent = 'Descargar';
+                    // Usar template string para generar el HTML de la tarjeta
+                    colDiv.innerHTML = `
+                        <div class="card mb-3 w-100">
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title">${file.file_title || 'Sin título'}</h5>
+                                <p class="card-text">Tamaño: ${size_formatted}</p>
+                                <p class="card-text">Autor: ${file.file_created_by}</p>
+                                <p class="card-text">Subido: ${fechaSubida}</p>
+                                <a href="#" class="btn btn-primary mt-auto" id="viewFile-${file.file_id}"> Ver Archivo </a>
+                            </div>
+                        </div>
+                    `;
 
-                    cardBodyDiv.appendChild(title);
-                    cardBodyDiv.appendChild(fileSize);
-                    cardBodyDiv.appendChild(uploadDate);
-                    cardBodyDiv.appendChild(downloadButton);
-
-                    cardDiv.appendChild(cardBodyDiv);
-                    colDiv.appendChild(cardDiv);
-
+                     
+                    
+                    // Añadir la tarjeta al contenedor principal
                     container.appendChild(colDiv);
+
+
+                    // Agregar evento click al botón
+                    document.getElementById(`viewFile-${file.file_id}`).addEventListener('click', function(event) {
+                        event.preventDefault();
+                        console.log("Se hizo clic en 'Ver Archivo' para:", file.file_title);
+
+                        // Verifica si el archivo tiene contenido
+                        if (file.file_blob) {
+                            console.log("Cargando archivo PDF en el iframe:", file.file_title);
+                            pdfViewerContainer.style.display = 'inline-block';
+
+                            // Cargar el PDF en el iframe
+                            const pdfData = 'data:application/pdf;base64,' + file.file_blob;
+                            const iframe = document.getElementById('pdfFrame');
+                            iframe.src = pdfData;
+                            mostrarPDF();
+                        } else {
+                            console.log("El archivo no tiene contenido disponible:", file.file_title);
+                            alert('El archivo no está disponible.');
+                        }
+                    });
                 });
 
                 console.log("Archivos cargados correctamente");
@@ -186,7 +200,9 @@ export const fileUseCase = {
                 return result;
 
             } else {
+
                 throw new Error(result.message || "No se pudieron obtener los archivos.");
+            
             }
 
         } catch (error) {
@@ -205,38 +221,38 @@ export const fileUseCase = {
     },
 
     mergeOperation: async function (merginFiles) {
+
         console.log("Merge Routine");
         console.log(merginFiles);
-    
-        console.log(merginFiles.length);
-    
+
+        var mergeSize = 0;
+        
         try {
             // Inicializar una variable para representar el resultado de la unión (puede ser una cadena o un buffer dependiendo de los datos)
             var mergeResult = []; 
 
-            
             const user = JSON.parse(localStorage.getItem('userPublicInfo')) || {};
 
             console.log(user);
     
             // Iterar sobre cada archivo en merginFiles
-            for (let file of merginFiles) {
+            for (let file of merginFiles.files) {
                 try {
-                    console.log("Trying to insert", file.data);
+                    console.log("Trying to insert", file.size);
     
                     // Aquí puedes procesar cada archivo y "unir" su contenido como parte del mergeResult
                     mergeResult.push( file.data );  // Ejemplo simple de procesamiento (concatena nombres)
-    
-                    // Insertar en la base de datos con eel (sin callback)
- 
 
-                    let response = await eel.insertar_archivo(file.name, user.user_id, false, false, file.data)();
+                    // Insertar en la base de datos con eel (sin callback)
+                    let response = await eel.insertar_archivo(file.name, "descripción", user.user_id, false, false, file.data, file.size.toString())();
                     if (response.status === "success") {
                         console.log("Archivo insertado correctamente:", file.name);
                     } else {
                         console.log("Error al insertar archivo:", file.name);
                     }
-    
+
+                    mergeSize += file.size;
+
                 } catch (error) {
                     console.log("Error al insertar archivo:", file.name, "Error:", error);
                     // No detener el ciclo, solo registrar el error y continuar
@@ -252,8 +268,8 @@ export const fileUseCase = {
             // Insertar la operación de "UNION" en la base de datos
             const merge64 = await eel.merge_pdfs(mergeResult)();
 
-            await eel.insertar_archivo(merginFiles.title, merginFiles.description ,user.user_id, true, merginFiles.isVisibleForAll, merge64)();
-    
+            await eel.insertar_archivo(merginFiles.title, merginFiles.description ,user.user_id, true, merginFiles.isVisibleForAll, merge64, mergeSize.toString() )();
+
         } catch (error) {
             console.log("Something went wrong with the merge:", error);
         }
@@ -261,5 +277,5 @@ export const fileUseCase = {
 
     insertMergeMembers : function() {
 
-    }
+    },
 };

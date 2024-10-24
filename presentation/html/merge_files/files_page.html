@@ -1,5 +1,7 @@
 <!DOCTYPE html>
+
 <html lang="es">
+
 <head>
     <meta charset="UTF-8"> 
     <title>Pantalla 2</title>  
@@ -12,7 +14,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
 </head>
+
 <body class="bg-black"> 
+
+    <div id="pdfViewerContainer">
+        <iframe id="pdfFrame" src="about:blank" width="100%"   style="border: none;"></iframe>
+    </div>
 
     <div class="backgroundFlows"></div>
 
@@ -45,7 +52,11 @@
                     </div>
 
                     <div class="col-3">
-                        <a href="#" class="btn btn-primary w-100" onclick="">Subir PDF</a>
+                        <!-- Botón de "Subir PDF" que activa el input -->
+                        <a href="#" class="btn w-100 btn-outline-primary" onclick="document.getElementById('fileInput').click()">Subir PDF</a>
+                        
+                        <!-- Input oculto para seleccionar archivos -->
+                        <input type="file" id="fileInput" accept=".pdf" style="display: none;" onchange="uploadFile(event)">
                     </div>
 
                     <div class="col-3">
@@ -68,6 +79,44 @@
             // Llama a la   función runUseCase cuando la página esté cargada
             await runUseCase('getUserFiles');
         };
+
+        async function uploadFile(event) {
+            const file = event.target.files[0]; // Obtener el archivo seleccionado
+
+            if (file) {
+                // Verificar si es un archivo PDF
+                if (file.type !== "application/pdf") {
+                    alert("Por favor, selecciona un archivo PDF.");
+                    return;
+                }
+
+                const user = JSON.parse(localStorage.getItem('userPublicInfo')) || {};
+
+                // Leer el archivo como base64
+                const reader = new FileReader();
+                reader.onloadend = async function () {
+                    const base64Data = reader.result.split(',')[1]; // Extraer los datos base64
+
+                    // Enviar el archivo a la base de datos usando eel o alguna otra función de backend
+                    try {
+                        let response = await eel.insertar_archivo(file.name, "Archivo subido por el usuario", user.user_id , false, false, base64Data, file.size)();
+                        
+                        if (response.status === "success") {
+                            await runUseCase('getUserFiles');
+                            alert("Archivo subido con éxito.");
+                        } else {
+                            alert("Error al subir el archivo.");
+                        }
+                    } catch (error) {
+                        console.error("Error al subir el archivo:", error);
+                        alert("Hubo un problema al subir el archivo.");
+                    }
+                };
+
+                // Leer el archivo
+                reader.readAsDataURL(file);
+            }
+        }
     </script>
 </body>
 </html>

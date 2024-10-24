@@ -213,5 +213,19 @@ input[type="file"] {
 }
 
 .small-card{
-  height: 180px;
+  height: 270px;
+}
+
+.btn-outline-primary { 
+    background-color: white; /* Cambia a un color verde */
+    border-color: #f2935c;    
+    color:  #f2935c;  
+  
+}
+
+.btn-outline-primary:hover { 
+  background-color: #f2935c; /* Cambia a un color verde */
+  border-color: #f2935c;    
+  color:  white;    
+
 }

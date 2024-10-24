@@ -146,7 +146,7 @@ def eliminar_archivo(file_id):
 
 # Insertar nuevo archivo
 @eel.expose
-def insertar_archivo(file_name, descripcion, user_id, is_visible, is_merge, file_data):
+def insertar_archivo(file_name, descripcion, user_id, is_visible, is_merge, file_data, size):
     try:
         # Intentar insertar el archivo
         new_file = File_Table.create(
@@ -155,7 +155,8 @@ def insertar_archivo(file_name, descripcion, user_id, is_visible, is_merge, file
             file_created_by=user_id,
             file_visible_for_all=is_visible,
             file_is_merge=is_merge,
-            file_data=base64.b64decode(file_data)
+            file_data=base64.b64decode(file_data),
+            file_size = size
         )
         return {"status": "success", "file_id": new_file.file_id}
     
@@ -170,7 +171,8 @@ def insertar_archivo(file_name, descripcion, user_id, is_visible, is_merge, file
             file_created_by=user_id,
             file_visible_for_all=is_visible,
             file_is_merge=is_merge,
-            file_data=file_data
+            file_data=file_data,
+            file_size = size
         )
         return {"status": "success", "file_id": new_file.file_id}
     
