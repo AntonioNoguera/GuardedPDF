@@ -116,10 +116,11 @@ export const fileUseCase = {
         }   
     },
 
-    getFilesByUser: async function(userId) {
+    getFilesByUser: async function() {
         try {
-            console.log("Solicitando archivos para el usuario:", userId);
-            const result = await eel.seleccionar_archivos_por_usuario(userId)();
+            const user = JSON.parse(localStorage.getItem('userPublicInfo')) || {};
+
+            const result = await eel.seleccionar_archivos_por_usuario(user.user_id)();
 
             if (result.success && result.files) {
                 console.log("Archivos del usuario obtenidos:", result.files);
@@ -212,6 +213,11 @@ export const fileUseCase = {
         try {
             // Inicializar una variable para representar el resultado de la unión (puede ser una cadena o un buffer dependiendo de los datos)
             var mergeResult = []; 
+
+            
+            const user = JSON.parse(localStorage.getItem('userPublicInfo')) || {};
+
+            console.log(user);
     
             // Iterar sobre cada archivo en merginFiles
             for (let file of merginFiles) {
@@ -222,7 +228,9 @@ export const fileUseCase = {
                     mergeResult.push( file.data );  // Ejemplo simple de procesamiento (concatena nombres)
     
                     // Insertar en la base de datos con eel (sin callback)
-                    let response = await eel.insertar_archivo(file.name, "descripcion", 1, false, false, file.data)();
+ 
+
+                    let response = await eel.insertar_archivo(file.name, user.user_id, false, false, file.data)();
                     if (response.status === "success") {
                         console.log("Archivo insertado correctamente:", file.name);
                     } else {
@@ -244,7 +252,7 @@ export const fileUseCase = {
             // Insertar la operación de "UNION" en la base de datos
             const merge64 = await eel.merge_pdfs(mergeResult)();
 
-            await eel.insertar_archivo("UNION", "descripcion", 1, false, false, merge64)();
+            await eel.insertar_archivo(merginFiles.title, merginFiles.description ,user.user_id, true, merginFiles.isVisibleForAll, merge64)();
     
         } catch (error) {
             console.log("Something went wrong with the merge:", error);

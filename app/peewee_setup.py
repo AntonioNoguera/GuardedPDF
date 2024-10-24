@@ -80,8 +80,8 @@ class File_Table(BaseModel):
     file_created_by = ForeignKeyField(User_Table, backref='files', on_delete='CASCADE')
     file_visible_for_all = BooleanField(default=False)
     file_is_merge = BooleanField(default=False)
-    file_data = BlobField(constraints=[SQL('LONGBLOB')])
-    
+    file_data = BlobField()  # Esto define la columna como LONGBLOB en MySQL
+
     # Método para convertir a un diccionario con fechas en formato ISO y archivo en base64
     def to_dict(self):
         # Codifica el archivo BLOB en base64 si está disponible
@@ -97,6 +97,7 @@ class File_Table(BaseModel):
             'file_is_merge': self.file_is_merge,
             'file_blob': file_data_base64,  # Devolver el archivo codificado en base64
         }
+
     
 class Merge_Member_Table(BaseModel):
     merge_member_id = AutoField()

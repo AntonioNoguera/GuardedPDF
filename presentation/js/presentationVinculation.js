@@ -195,9 +195,8 @@ async function runUseCase(caseEndpoint, content) {  // Añadir async aquí
             break;
 
         case "getUserFiles" :
-            //Readed from memory
-            const UserId = 3;
-            const getFiles = await fileUseCase.getFilesByUser(UserId);
+            //Readed from memory 
+            const getFiles = await fileUseCase.getFilesByUser();
             break;
         
         case "getAllFiles":
