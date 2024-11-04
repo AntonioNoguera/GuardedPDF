@@ -82,6 +82,36 @@
             // Enviar los valores a la función runUseCase
             runUseCase('tryLogin', content);
         });
+
+        window.onload = async function() {
+        console.log("window.onload called");
+        const userPublicInfo = localStorage.getItem('userPublicInfo');
+        if (userPublicInfo) {
+            console.log("userPublicInfo found in localStorage");
+            // Llamada a Eel para obtener el salt y la contraseña hasheada
+            const userName = JSON.parse(userPublicInfo).user_name;
+            if (userName) {
+                console.log("userName found in userPublicInfo:", userName);
+                try {
+                    const result = await eel.obtener_salt_y_password(userName)();
+                    if (result.success) {
+                        console.log("Result success:", result);
+                        alert("Lanzar al otro");
+                        freeNavigateTo(Routes.FILES_PAGE);
+                    } else {
+                        console.log("Result failed:", result);
+                        alert("Aqui te quedas");
+                    }
+                } catch (error) {
+                    console.error("Error during eel call:", error);
+                }
+            } else {
+                console.log("userName not found in userPublicInfo");
+            }
+        } else {
+            console.log("userPublicInfo not found in localStorage");
+        }
+    };
     </script>
 </body>
 </html>

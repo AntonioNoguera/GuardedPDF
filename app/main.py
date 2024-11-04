@@ -5,15 +5,7 @@ from pypdf import PdfWriter, PdfReader
 from peewee_setup import *
 import datetime
 from peewee import IntegrityError, DoesNotExist
-
-# Crear tablas en la base de datos
-def crear_tablas():
-    try:
-        with db:
-            db.create_tables([Role_Table, User_Table, File_Table, Merge_Member_Table])
-        print("Tablas creadas correctamente.")
-    except Exception as e:
-        print(f"Error al crear tablas: {e}")
+ 
 
 # USER
 # Insertar nuevo usuario

@@ -8,13 +8,11 @@ export const userUseCase = {
     },
 
     //Obtener ID y Nivel
-    getUserInfo : async function(userName) {
-        alert("Tried to get user Info");
+    getUserInfo : async function(userName) { 
         try {
             const result = await eel.obtener_id_y_nivel_de_usuario(userName)();
 
             if (result.success) {
-                
                 console.log(result);
                 localStorage.setItem('userPublicInfo', JSON.stringify(result.user)); 
             } else {
@@ -87,23 +85,20 @@ export const userUseCase = {
                 const hashArray = Array.from(new Uint8Array(hashBuffer));
                 const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     
-                if (hashHex === storedHash) {
-                    alert("Password is correct");
-
-                    //Setear info del usuario, nivel y nombre namas
-    
-                    // Actualizar la fecha de login del usuario
+                if (hashHex === storedHash) {  
                     await this.updateLoginDate(userName);
 
                     await this.getUserInfo(userName);
     
                     return true;  // Retorna true si todo es correcto
                 } else {
-                    alert("Incorrect password");
+                    alert("Contraseña Incorrecta");
                     return false;  // Retorna false si la contraseña es incorrecta
                 }
+            } else {
+                alert("Usuario no encontrado");
             }
-            alert(result.message);
+            
             return false;
 
         } catch (error) {
@@ -117,11 +112,9 @@ export const userUseCase = {
     // Actualizar fecha de login del usuario
     updateLoginDate: async function(userId) {
         try {
-            const result = await eel.actualizar_fecha_login(userId)();
-            alert("Fecha Actualizada: " + result.message);
+            const result = await eel.actualizar_fecha_login(userId)(); 
         } catch (error) {
-            console.error("Error al actualizar la fecha de login:", error);
-            alert("Ocurrió un error al actualizar la fecha de login.");
+            console.error("Error al actualizar la fecha de login:", error); 
         }
     },
 
@@ -172,5 +165,6 @@ export const userUseCase = {
             console.error("Error al obtener usuarios activos e inactivos:", error);
             alert("Ocurrió un error al obtener usuarios.");
         }
-    }    
+    },  
+        
 };

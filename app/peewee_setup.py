@@ -1,6 +1,5 @@
 import pymysql
 import base64
-
 from peewee import *
 import datetime
 
@@ -111,10 +110,50 @@ def crear_tablas():
     with db:
         db.create_tables([Role_Table, User_Table, File_Table, Merge_Member_Table])
 
-# Métodos Requeridos
-# (resto del código permanece igual)
+        # Insertar registros en la tabla de roles si no existen
+        try:
+            admin_role, created = Role_Table.get_or_create(role_name='admin', defaults={'role_description': 'Administrator role'})
+            user_role, created = Role_Table.get_or_create(role_name='user', defaults={'role_description': 'User role'})
+        except IntegrityError as e:
+            print(f"Error al crear roles: {e}")
+
+        # Insertar un registro en la tabla de usuarios si no existe
+        try:
+            User_Table.get_or_create(user_name='admin', defaults={
+                'user_fullname': 'Administrador', 
+                'user_password': '7d99383efec0128e336eaf4708db85e0ec10eee2412a12599174afbacef45baf', 
+                'user_password_salt': '2a0ae1ad4c6ec49ed01c17cb28b828ca', 
+                'user_authorized' : 1 , 
+                'user_role_id': admin_role
+                })
+        except IntegrityError as e:
+            print(f"Error al crear usuario admin: {e}")
+
+    print("Base de datos y tablas creadas correctamente")
 
 if __name__ == "__main__":
     # Crear las tablas después de asegurar que la base de datos existe
-    crear_tablas()
+    try:
+        with db.atomic():
+            crear_tablas()
+    except OperationalError as e:
+        print(f"Error al crear tablas: {e}")
     print("Base de datos y tablas creadas correctamente")
+
+    # Intentar insertar registros en la base de datos
+    try:
+        with db.atomic():
+            admin_role, created = Role_Table.get_or_create(role_name='admin', defaults={'role_description': 'Administrator role'})
+            user_role, created = Role_Table.get_or_create(role_name='user', defaults={'role_description': 'User role'})
+            user_admin, created = User_Table.get_or_create(user_name='admin', defaults={
+                'user_fullname': 'Administrador', 
+                'user_password': '7d99383efec0128e336eaf4708db85e0ec10eee2412a12599174afbacef45baf', 
+                'user_password_salt': '2a0ae1ad4c6ec49ed01c17cb28b828ca', 
+                'user_authorized' : 1 , 
+                'user_role_id': admin_role
+                }
+            )
+            print("Registros insertados correctamente")
+    except IntegrityError as e:
+        print(f"Error al insertar registros: {e}")
+        

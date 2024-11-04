@@ -3,8 +3,7 @@ import { registerValidation, loginValidations } from './app_validations/auth_val
 
 //Importing Data Methods
 import { userUseCase } from './use_cases/users.js';
-import { fileUseCase } from './use_cases/files.js';
-import { mergeUseCase } from './use_cases/merges.js';
+import { fileUseCase } from './use_cases/files.js'; 
 
 const Routes = Object.freeze({ 
     REGISTER_PAGE: '/html/auth/register_page.html',
@@ -17,7 +16,6 @@ const Routes = Object.freeze({
     ADMIN_PAGE: '../../html/user_administration/user_admin_page.html',
 });
   
-
 // Opciones de formato para la fecha con mes abreviado y formato 24h
 const options = { 
     year: 'numeric', 
@@ -41,6 +39,9 @@ function navigateTo (data, content) {
 
         case Routes.LOGIN_PAGE:
             freeNavigateTo(Routes.LOGIN_PAGE); 
+            
+            localStorage.removeItem('userPublicInfo');
+
             break;
 
         case Routes.FILES_PAGE:
@@ -81,7 +82,7 @@ async function runUseCase(caseEndpoint, content) {  // Añadir async aquí
                     freeNavigateTo(Routes.FILES_PAGE);
                 }
             }
-            break;
+            break; 
 
         case "getAllUsers": 
             try {

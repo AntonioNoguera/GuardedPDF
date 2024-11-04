@@ -227,5 +227,12 @@ input[type="file"] {
   background-color: #f2935c; /* Cambia a un color verde */
   border-color: #f2935c;    
   color:  white;    
+}
 
+.closing {
+  color : #e23434;
+}
+
+.closing:hover {
+  color : #e23434 !important;
 }

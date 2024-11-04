@@ -36,6 +36,7 @@
                 <a class="user_type" style="margin-right: 20px;">Permisos (Administrador)</a>
                 <a href="#" onclick="navigateTo(Routes.HISTORY_PAGE)" class="nav-link" style="margin-right: 20px;">Historial de Transacciones</a>
                 <a href="#" onclick="navigateTo(Routes.ADMIN_PAGE)" class="nav-link" style="margin-right: 20px;">Administración de Usuarios</a>
+                <a href="#" onclick="navigateTo(Routes.LOGIN_PAGE)" class="nav-link closing" style="margin-right: 20px;">Cerrar Sesión</a>
             </div>
         </div>
     </nav>
@@ -44,7 +45,7 @@
 
         <div class="row w-100 align-items-center">
             <div class="col-12">
-                <h3 class="text-center mt-3">Bienvenido, Michael Noguera</h3> 
+                <h3 id="user_improves" class="text-center mt-3"></h3> 
             
                 <div class="row py-4 px-3">
                     <div class="col-6 my-auto px-0">
@@ -78,6 +79,17 @@
          window.onload = async function() {
             // Llama a la   función runUseCase cuando la página esté cargada
             await runUseCase('getUserFiles');
+
+            const user = JSON.parse(localStorage.getItem('userPublicInfo')) || {};
+
+                const userImprovesElement = document.getElementById('user_improves');
+                
+                if (userImprovesElement) {
+                    userImprovesElement.innerHTML = "Bienvenido, " + user.user_name;
+                    console.log("Element found and updated:", userImprovesElement.innerHTML);
+                } else {
+                    console.error("Element with ID 'user_improves' not found.");
+                }
         };
 
         async function uploadFile(event) {
@@ -90,7 +102,7 @@
                     return;
                 }
 
-                const user = JSON.parse(localStorage.getItem('userPublicInfo')) || {};
+                 
 
                 // Leer el archivo como base64
                 const reader = new FileReader();
