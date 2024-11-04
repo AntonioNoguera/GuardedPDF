@@ -5,6 +5,8 @@ from pypdf import PdfWriter, PdfReader
 from peewee_setup import *
 import datetime
 from peewee import IntegrityError, DoesNotExist
+
+from pymysql_setup import crear_base_datos_y_tablas
  
 
 # USER
@@ -246,5 +248,6 @@ eel.init('../presentation', allowed_extensions=['.js', '.html', '.css'])
 
 # Iniciar la aplicación
 if __name__ == "__main__":
+    crear_base_datos_y_tablas()
     crear_tablas()
     eel.start('/html/auth/index.html', size=(3000, 3000), position=(500, 500))
