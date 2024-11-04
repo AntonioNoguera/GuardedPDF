@@ -1,6 +1,9 @@
 import eel
 import base64
 import io
+
+import os
+import sys
 from pypdf import PdfWriter, PdfReader
 from peewee_setup import *
 import datetime
@@ -8,6 +11,18 @@ from peewee import IntegrityError, DoesNotExist
 
 from pymysql_setup import crear_base_datos_y_tablas
  
+# Definir función para obtener rutas de recursos
+def resource_path(relative_path):
+    """ Obtiene la ruta al recurso necesario, considerando si está empaquetado """
+    try:
+        # Si está empaquetado por PyInstaller, usa _MEIPASS para encontrar los recursos.
+        base_path = sys._MEIPASS
+    except Exception:
+        # Si no está empaquetado, usa la ruta actual
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
 
 # USER
 # Insertar nuevo usuario
@@ -270,12 +285,15 @@ def merge_pdfs(base64_pdfs):
 @eel.expose
 def testConection():
     print('Conectado')
+ 
 
-# Inicializar Eel
-eel.init('../presentation', allowed_extensions=['.js', '.html', '.css'])
+# Inicializar Eel apuntando a la carpeta `presentation`
+eel.init(resource_path('presentation'))
 
 # Iniciar la aplicación
 if __name__ == "__main__":
     crear_base_datos_y_tablas()
     crear_tablas()
-    eel.start('/html/auth/index.html', size=(3000, 3000), position=(500, 500))
+
+    # Utiliza `resource_path()` para la ruta de `index.html`
+    eel.start('html/auth/index.html', size=(1000, 800), position=(100, 100), port=8090)
