@@ -84,20 +84,63 @@ class File_Table(BaseModel):
 
     # Método para convertir a un diccionario con fechas en formato ISO y archivo en base64
     def to_dict(self):
-        # Codifica el archivo BLOB en base64 si está disponible
-        file_data_base64 = base64.b64encode(self.file_data).decode('utf-8') if self.file_data else None
+        print("Iniciando la conversión del objeto File_Table a diccionario...")
 
-        return {
-            'file_id': self.file_id,
-            'file_title': self.file_title,
-            'file_description': self.file_description,
-            'file_created_at': self.file_created_at.isoformat() if self.file_created_at else None,
-            'file_created_by': self.file_created_by.user_name,  # Devolver el ID del usuario en lugar de user_name
-            'file_visible_for_all': self.file_visible_for_all,
-            'file_is_merge': self.file_is_merge,
-            'file_blob': file_data_base64,  # Devolver el archivo codificado en base64
-            'file_size' : self.file_size,
-        }
+        # Codifica el archivo BLOB en base64 si está disponible
+        try:
+            if self.file_data:
+                file_data_base64 = base64.b64encode(self.file_data).decode('utf-8')
+                print("Archivo BLOB codificado correctamente en base64.")
+            else:
+                file_data_base64 = None
+                print("Archivo BLOB no disponible, asignando valor None.")
+        except Exception as e:
+            print(f"Error al codificar el archivo BLOB en base64: {e}")
+            file_data_base64 = None
+
+        # Obtener el ID del usuario creador
+        try:
+            user_id = self.file_created_by_id
+            print(f"ID del usuario creador obtenido correctamente: {user_id}")
+        except Exception as e:
+            print(f"Error al obtener el ID del usuario creador: {e}")
+            user_id = None
+
+        # Realizar una consulta para obtener el usuario a partir del ID
+        if user_id:
+            try:
+                user = User_Table.get_by_id(user_id)
+                user_name = user.user_name
+                print(f"Nombre del usuario creador obtenido correctamente: {user_name}")
+            except User_Table.DoesNotExist:
+                user_name = 'Desconocido'
+                print(f"Usuario con ID {user_id} no existe en la base de datos.")
+            except Exception as e:
+                user_name = 'Error al obtener el nombre del usuario'
+                print(f"Error al consultar el usuario creador: {e}")
+        else:
+            user_name = 'Desconocido'
+            print("No se pudo obtener el ID del usuario creador, asignando 'Desconocido'.")
+
+        # Crear el diccionario para devolver los datos del archivo
+        try:
+            file_dict = {
+                'file_id': self.file_id,
+                'file_title': self.file_title,
+                'file_description': self.file_description,
+                'file_created_at': self.file_created_at.isoformat() if self.file_created_at else None,
+                'file_created_by': user_name,  # Devolver el nombre del usuario
+                'file_visible_for_all': self.file_visible_for_all,
+                'file_is_merge': self.file_is_merge,
+                'file_blob': file_data_base64,  # Devolver el archivo codificado en base64
+                'file_size': self.file_size,
+            }
+            print("Diccionario creado correctamente a partir del objeto File_Table.")
+        except Exception as e:
+            print(f"Error al crear el diccionario del archivo: {e}")
+            file_dict = {}
+
+        return file_dict
 
     
 class Merge_Member_Table(BaseModel):
@@ -108,7 +151,7 @@ class Merge_Member_Table(BaseModel):
 # Crear tablas en la base de datos
 def crear_tablas():
     with db:
-        db.create_tables([Role_Table, User_Table, File_Table, Merge_Member_Table])
+        #db.create_tables([Role_Table, User_Table, File_Table, Merge_Member_Table])
 
         # Insertar registros en la tabla de roles si no existen
         try:

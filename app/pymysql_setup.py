@@ -31,12 +31,12 @@ def crear_base_datos_y_tablas():
         file_title VARCHAR(80) NOT NULL,
         file_description VARCHAR(100) NOT NULL,
         file_created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        file_created_by INT NOT NULL,
+        file_created_by_id INT NOT NULL,
         file_visible_for_all BOOLEAN DEFAULT FALSE,
         file_is_merge BOOLEAN DEFAULT FALSE,
         file_data LONGBLOB,
         file_size VARCHAR(25),
-        FOREIGN KEY (file_created_by) REFERENCES User_Table(user_id) ON DELETE CASCADE
+        FOREIGN KEY (file_created_by_id) REFERENCES User_Table(user_id) ON DELETE CASCADE
     );
 
     CREATE TABLE IF NOT EXISTS Merge_Member_Table (

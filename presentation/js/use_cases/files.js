@@ -124,6 +124,8 @@ export const fileUseCase = {
 
             const result = await eel.seleccionar_archivos_por_usuario(user.user_id)();
 
+            console.log("id usuario consultado; ", user.user_id);
+
             if (result.success && result.files) {
 
                 console.log("Archivos del usuario obtenidos:", result.files);

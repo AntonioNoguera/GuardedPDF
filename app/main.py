@@ -138,10 +138,21 @@ def eliminar_archivo(file_id):
     except Exception as e:
         return {"success": False, "message": f"Error al eliminar archivo: {e}"}
 
-# Insertar nuevo archivo
 @eel.expose
 def insertar_archivo(file_name, descripcion, user_id, is_visible, is_merge, file_data, size):
     try:
+        print("Iniciando la inserción de un archivo...")
+        print(f"Datos recibidos: file_name={file_name}, descripcion={descripcion}, user_id={user_id}, "
+              f"is_visible={is_visible}, is_merge={is_merge}, file_size={size}")
+
+        # Decodificar file_data desde base64 a bytes
+        try:
+            decoded_file_data = base64.b64decode(file_data)
+            print("Archivo decodificado correctamente desde base64.")
+        except Exception as e:
+            print(f"Error al decodificar el archivo desde base64: {e}")
+            return {"status": "error", "message": f"Error al decodificar el archivo: {e}"}
+
         # Intentar insertar el archivo
         new_file = File_Table.create(
             file_title=file_name,
@@ -149,26 +160,43 @@ def insertar_archivo(file_name, descripcion, user_id, is_visible, is_merge, file
             file_created_by=user_id,
             file_visible_for_all=is_visible,
             file_is_merge=is_merge,
-            file_data=base64.b64decode(file_data),
-            file_size = size
+            file_data=decoded_file_data,
+            file_size=size
         )
+        print(f"Archivo insertado correctamente con file_id={new_file.file_id}")
         return {"status": "success", "file_id": new_file.file_id}
     
     except OperationalError as e:
-        print(f"Error de conexión: {e}, reintentando...")
-        # Intentar reconectar
-        db.connect(reuse_if_open=True)
-        # Reintentar la operación
-        new_file = File_Table.create(
-            file_title=file_name,
-            file_description=descripcion,
-            file_created_by=user_id,
-            file_visible_for_all=is_visible,
-            file_is_merge=is_merge,
-            file_data=file_data,
-            file_size = size
-        )
-        return {"status": "success", "file_id": new_file.file_id}
+        print(f"Error de conexión: {e}, intentando reconectar...")
+
+        # Intentar reconectar si la conexión falla
+        try:
+            db.connect(reuse_if_open=True)
+            print("Reconexión exitosa.")
+        except Exception as e:
+            print(f"Error al reconectar a la base de datos: {e}")
+            return {"status": "error", "message": "No se pudo reconectar a la base de datos."}
+
+        # Reintentar la operación después de reconectar
+        try:
+            new_file = File_Table.create(
+                file_title=file_name,
+                file_description=descripcion,
+                file_created_by=user_id,
+                file_visible_for_all=is_visible,
+                file_is_merge=is_merge,
+                file_data=decoded_file_data,
+                file_size=size
+            )
+            print(f"Archivo insertado correctamente después de reconexión con file_id={new_file.file_id}")
+            return {"status": "success", "file_id": new_file.file_id}
+        except Exception as e:
+            print(f"Error al reinsertar el archivo después de la reconexión: {e}")
+            return {"status": "error", "message": f"Error al reinsertar el archivo: {e}"}
+
+    except Exception as e:
+        print(f"Error inesperado durante la inserción del archivo: {e}")
+        return {"status": "error", "message": f"Error inesperado: {e}"}
     
 # Insertar nuevo miembro de unión
 @eel.expose
