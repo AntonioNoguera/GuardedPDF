@@ -1,6 +1,5 @@
 // Use Case Agrupation for Users, Files, and Merges
 export const userUseCase = {
-
     // Test de conexión
     testConection: function() {
         alert("Actual Linked");
@@ -138,13 +137,27 @@ export const userUseCase = {
 
     // Eliminar usuario
     deleteUser: function(userId) {
-        eel.eliminar_usuario(userId)()
+
+        
+
+        const user = JSON.parse(localStorage.getItem('userPublicInfo')) || {};
+        console.log(user);
+
+        console.log(userId + "es igual a? " + user.user_id);
+
+        if(user.user_id === userId){
+            alert("No puedes eliminar tu propio usuario");
+        }else{
+            eel.eliminar_usuario(userId)()
             .then(result => {
                 return result;
             })
             .catch(error => {
                 console.error("Error al eliminar el usuario:", error);
-            });
+            }); 
+        }
+
+        
     },
     
     getActiveAndInactiveUsers: async function() {

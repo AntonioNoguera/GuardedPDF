@@ -83,7 +83,7 @@
             runUseCase('tryLogin', content);
         });
 
-        window.onload = async function() {
+        window.onload = async function() { 
         console.log("window.onload called");
         const userPublicInfo = localStorage.getItem('userPublicInfo');
         if (userPublicInfo) {
@@ -95,12 +95,10 @@
                 try {
                     const result = await eel.obtener_salt_y_password(userName)();
                     if (result.success) {
-                        console.log("Result success:", result);
-                        alert("Lanzar al otro");
+                        console.log("Result success:", result); 
                         freeNavigateTo(Routes.FILES_PAGE);
                     } else {
-                        console.log("Result failed:", result);
-                        alert("Aqui te quedas");
+                        console.log("Result failed:", result); 
                     }
                 } catch (error) {
                     console.error("Error during eel call:", error);
@@ -110,7 +108,7 @@
             }
         } else {
             console.log("userPublicInfo not found in localStorage");
-        }
+        } 
     };
     </script>
 </body>

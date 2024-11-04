@@ -167,8 +167,6 @@ export const fileUseCase = {
                         </div>
                     `;
 
-                     
-                    
                     // Añadir la tarjeta al contenedor principal
                     container.appendChild(colDiv);
 
