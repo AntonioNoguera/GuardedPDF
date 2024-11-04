@@ -33,9 +33,9 @@
             <a class="navbar-brand">SafePDF ( FIME )</a>
     
             <div class="d-flex ms-auto">
-                <a class="user_type" style="margin-right: 20px;">Permisos (Administrador)</a>
+                <a class="user_type" id="user_level_hyperlink" style="margin-right: 20px;">Permisos (Administrador)</a>
                 <a href="#" onclick="navigateTo(Routes.HISTORY_PAGE)" class="nav-link" style="margin-right: 20px;">Historial de Transacciones</a>
-                <a href="#" onclick="navigateTo(Routes.ADMIN_PAGE)" class="nav-link" style="margin-right: 20px;">Administración de Usuarios</a>
+                <a href="#" onclick="navigateTo(Routes.ADMIN_PAGE)" id="user_admin_link" class="nav-link" style="margin-right: 20px;">Administración de Usuarios</a>
                 <a href="#" onclick="navigateTo(Routes.LOGIN_PAGE)" class="nav-link closing" style="margin-right: 20px;">Cerrar Sesión</a>
             </div>
         </div>
@@ -87,6 +87,32 @@
                 if (userImprovesElement) {
                     userImprovesElement.innerHTML = "Bienvenido, " + user.user_name;
                     console.log("Element found and updated:", userImprovesElement.innerHTML);
+                } else {
+                    console.error("Element with ID 'user_improves' not found.");
+                }
+
+                
+                const userAdmin = document.getElementById('user_admin_link');
+                 
+                if (userAdmin) {
+                    console.log("User!;" + user.user_role_id);
+
+                    if (user.user_role_id.localCompare("admin") ) {
+                        userAdmin.style.display = "block";
+                    } else {
+                        userAdmin.style.display = "none";
+
+                    } 
+                    console.log("Element found and updated:", userAdmin.innerHTML);
+
+                    const userLevel = document.getElementById('user_level_hyperlink');
+
+                    if (user.user_role_id.localCompare("admin") ) {
+                        userLevel.innerHTML = "Permisos (Administrador)";
+                    } else {
+                        userLevel.innerHTML = "Permisos (Usuario)";
+                    }
+
                 } else {
                     console.error("Element with ID 'user_improves' not found.");
                 }

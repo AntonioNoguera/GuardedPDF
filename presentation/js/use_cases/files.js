@@ -248,7 +248,7 @@ export const fileUseCase = {
                     if (response.status === "success") {
                         console.log("Archivo insertado correctamente:", file.name);
                     } else {
-                        console.log("Error al insertar archivo:", file.name);
+                        console.log("Error al insertar archivo:", file.name); 
                     }
 
                     mergeSize += file.size;
@@ -256,6 +256,7 @@ export const fileUseCase = {
                 } catch (error) {
                     console.log("Error al insertar archivo:", file.name, "Error:", error);
                     // No detener el ciclo, solo registrar el error y continuar
+
                     continue;
                 }
             }
@@ -268,7 +269,18 @@ export const fileUseCase = {
             // Insertar la operación de "UNION" en la base de datos
             const merge64 = await eel.merge_pdfs(mergeResult)();
 
-            await eel.insertar_archivo(merginFiles.title, merginFiles.description ,user.user_id, true, merginFiles.isVisibleForAll, merge64, mergeSize.toString() )();
+            const lastMergeInsertion = await eel.insertar_archivo(merginFiles.title, merginFiles.description ,user.user_id, true, merginFiles.isVisibleForAll, merge64, mergeSize.toString() )();
+
+            if (lastMergeInsertion.status === "success") {
+                document.getElementById('title_merge').value = '';
+                document.getElementById('description_merge').value = '';
+                document.getElementById('fileInput').value = '';
+                document.getElementById('file_working_area').innerHTML = '';
+
+                alert("Union realizada correctamente!");
+            } else {
+                console.log("Error al insertar merge:", lastMergeInsertion.message); 
+            }
 
         } catch (error) {
             console.log("Something went wrong with the merge:", error);
